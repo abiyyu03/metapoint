@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('fundraising_agents', function (Blueprint $table) {
             $table->id();
+            $table->string("type");
+            $table->string("unit");
+            $table->string("amount_unit");
             $table->timestamps();
         });
     }

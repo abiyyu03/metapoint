@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('directorate35s', function (Blueprint $table) {
+        Schema::create('agent_target', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("agent_id");
+            $table->foreignId("target_id");
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('directorate35s');
+        Schema::dropIfExists('pivots');
     }
 };

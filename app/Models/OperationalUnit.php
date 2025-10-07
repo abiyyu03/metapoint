@@ -5,7 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Directorate33 extends Model
+class OperationalUnit extends Model
 {
     use SoftDeletes;
+
+    protected $table = 'issues';
+
+    protected $fillable = [
+        'name',
+    ];
 }
