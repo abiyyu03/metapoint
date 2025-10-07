@@ -12,6 +12,12 @@ return new class extends Migration
     public function up(): void
     {
 
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+            $table->string("name");
+            $table->timestamps();
+        });
+
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->string("name");
@@ -39,7 +45,7 @@ return new class extends Migration
         Schema::create('intelligent_method_options', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->foreignId("intelligent_method_id");
+            $table->foreignId("intelligent_method_id")->nullable();
             $table->timestamps();
         });
 

@@ -74,4 +74,9 @@ class Target extends Model
         return $this->belongsToMany(Agent::class, 'agent_target', 'target_id', 'agent_id')
             ->withTimestamps();
     }
+
+    public function fundraisingTargets()
+    {
+        return $this->hasMany(FundraisingTarget::class, 'target_id');
+    }
 }

@@ -17,4 +17,9 @@ class IntelligentMethodOption extends Model
     {
         return $this->belongsTo(IntelligentMethod::class, 'method_id');
     }
+
+    public function fundraisingTargets()
+    {
+        return $this->hasMany(FundraisingTarget::class, 'method_option_id');
+    }
 }

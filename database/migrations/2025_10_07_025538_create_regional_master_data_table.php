@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("code")->nullable();
+            $table->foreignId("district_id")->nullable();
             $table->timestamps();
         });
 
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("code")->nullable();
+            $table->foreignId("city_id")->nullable();
             $table->timestamps();
         });
 
@@ -29,6 +31,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("code")->nullable();
+            $table->foreignId("province_id")->nullable();
             $table->timestamps();
         });
 
@@ -36,6 +39,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("code")->nullable();
+            $table->foreignId("country_id")->nullable();
             $table->timestamps();
         });
 

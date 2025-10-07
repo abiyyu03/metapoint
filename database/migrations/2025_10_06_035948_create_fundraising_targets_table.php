@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('fundraising_targets', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("target_id");
             $table->string("type");
             $table->string("unit");
             $table->string("amount_unit");
