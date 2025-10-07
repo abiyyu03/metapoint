@@ -27,6 +27,7 @@ return new class extends Migration
             $table->foreignId("country_id");
             $table->float("lat");
             $table->float("lng");
+            $table->foreignId("operational_unit_id");
             $table->timestamps();
         });
     }

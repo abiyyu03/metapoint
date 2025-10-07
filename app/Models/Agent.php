@@ -25,6 +25,7 @@ class Agent extends Model
         'country_id',
         'lat',
         'lng',
+        'operational_unit_id'
     ];
 
     public function organization()
@@ -62,9 +63,19 @@ class Agent extends Model
         return $this->belongsTo(Country::class, 'country_id');
     }
 
+    public function operationalUnit()
+    {
+        return $this->belongsTo(OperationalUnit::class, 'operational_unit_id');
+    }
+
     public function targets()
     {
         return $this->belongsToMany(Target::class, 'agent_target', 'agent_id', 'target_id')
             ->withTimestamps();
+    }
+
+    public function fundraisingAgents()
+    {
+        return $this->hasMany(FundraisingAgent::class, 'agent_id');
     }
 }

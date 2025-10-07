@@ -11,8 +11,14 @@ class FundraisingAgent extends Model
     protected $table = 'fundraising_agents';
 
     protected $fillable = [
+        'agent_id',
         'type',
         'unit',
         'amount_unit',
     ];
+
+    public function agent()
+    {
+        return $this->belongsTo(Agent::class, 'agent_id');
+    }
 }

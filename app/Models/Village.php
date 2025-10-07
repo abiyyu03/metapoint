@@ -11,5 +11,11 @@ class Village extends Model
     protected $fillable = [
         'name',
         'code',
+        'district_id'
     ];
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_id');
+    }
 }

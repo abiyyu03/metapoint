@@ -11,4 +11,9 @@ class Issue extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function targets()
+    {
+        return $this->hasMany(Target::class, 'issue_id');
+    }
 }
