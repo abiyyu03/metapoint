@@ -24,10 +24,10 @@ class FundraisingTargetResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::CurrencyDollar;
 
     protected static ?string $recordTitleAttribute = 'Penggalangan Target';
-
     protected static string | UnitEnum | null $navigationGroup = 'Penggalangan Dana';
 
     protected static ?string $navigationLabel = 'Target';
+
 
     public static function form(Schema $schema): Schema
     {

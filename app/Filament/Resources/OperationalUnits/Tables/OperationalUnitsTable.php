@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\FundraisingTargets\Tables;
+namespace App\Filament\Resources\OperationalUnits\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -11,36 +11,19 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class FundraisingTargetsTable
+class OperationalUnitsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('target_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('type')
+                TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('unit')
-                    ->searchable(),
-                TextColumn::make('amount_unit')
-                    ->searchable(),
-                TextColumn::make('method_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('method_option_id')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

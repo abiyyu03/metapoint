@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\FundraisingTargets\Tables;
+namespace App\Filament\Resources\Targets\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -11,25 +11,48 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class FundraisingTargetsTable
+class TargetsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('target_id')
+                TextColumn::make('first_name')
+                    ->searchable(),
+                TextColumn::make('last_name')
+                    ->searchable(),
+                TextColumn::make('age')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('type')
-                    ->searchable(),
-                TextColumn::make('unit')
-                    ->searchable(),
-                TextColumn::make('amount_unit')
-                    ->searchable(),
-                TextColumn::make('method_id')
+                TextColumn::make('gender'),
+                TextColumn::make('organization_id')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('method_option_id')
+                TextColumn::make('title_id')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('village_id')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('district_id')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('city_id')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('province_id')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('country_id')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('lat')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('lng')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('issue_id')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
