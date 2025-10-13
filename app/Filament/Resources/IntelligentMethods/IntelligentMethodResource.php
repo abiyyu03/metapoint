@@ -20,9 +20,10 @@ class IntelligentMethodResource extends Resource
 {
     protected static ?string $model = IntelligentMethod::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::BookOpen;
 
     protected static ?string $recordTitleAttribute = 'Metode Intelijen';
+    protected static ?string $navigationLabel = 'Metode Intelijen';
 
     public static function form(Schema $schema): Schema
     {

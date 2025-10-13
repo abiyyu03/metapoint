@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\IntelligentMethods\Tables;
+namespace App\Filament\Resources\Roles\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -11,14 +11,13 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class IntelligentMethodsTable
+class RolesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Name')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -27,16 +26,6 @@ class IntelligentMethodsTable
             ])
             ->filters([
                 TrashedFilter::make(),
-            ])
-            ->recordActions([
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
-                ]),
             ]);
     }
 }
