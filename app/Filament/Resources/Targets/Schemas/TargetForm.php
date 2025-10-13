@@ -26,19 +26,22 @@ class TargetForm
                 TextInput::make('last_name')
                     ->required(),
                 TextInput::make('age')
+                    ->label('Umur')
                     ->required()
-                    ->numeric()
-                    ->default(0),
+                    ->numeric(),
                 Select::make('gender')
-                    ->options(['L' => 'L', 'P' => 'P'])
+                    ->label('Jenis Kelamin')
+                    ->options(['L' => 'Laki-laki', 'P' => 'Perempuan'])
                     ->required(),
                 Select::make('organization_id')
+                    ->searchable()
                     ->options(Organization::query()->pluck('name', 'id'))
                     ->label('Asal Kelompok'),
                 Select::make('title_id')
                     ->options(Title::query()->pluck('name', 'id'))
                     ->label('Jabatan'),
                 Textarea::make('address')
+                    ->label('Alamat Target')
                     ->columnSpanFull(),
                 Select::make('village_id')
                     ->searchable()
@@ -46,7 +49,6 @@ class TargetForm
                     ->label('Desa/Kelurahan')
                     ->required(),
                 Select::make('district_id')
-                    ->searchable()
                     ->options(District::query()->pluck('name', 'id'))
                     ->label('Kecamatan')
                     ->searchable()

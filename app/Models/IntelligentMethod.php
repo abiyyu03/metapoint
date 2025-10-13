@@ -15,9 +15,9 @@ class IntelligentMethod extends Model
         'name',
     ];
 
-    public function intelligentMethodOptions()
+    public function IntelligentMethodOption()
     {
-        return $this->hasMany(IntelligentMethodOption::class, 'method_id');
+        return $this->hasMany(IntelligentMethodOption::class, 'intelligent_method_id');
     }
 
     public function fundraisingTargets()
