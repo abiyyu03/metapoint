@@ -15,15 +15,17 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class IntelligentMethodOptionResource extends Resource
 {
     protected static ?string $model = IntelligentMethodOption::class;
-
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ListBullet;
-
     protected static ?string $recordTitleAttribute = 'Opsi Metode Intelijen';
     protected static ?string $navigationLabel = 'Opsi Metode Intelijen';
+    protected static ?int $navigationSort = 2;
+    protected static string|UnitEnum|null $navigationGroup = 'Master Data';
+    protected static ?string $slug = '/master/opsi-metode-intelijen';
 
     public static function form(Schema $schema): Schema
     {
@@ -37,9 +39,7 @@ class IntelligentMethodOptionResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -57,5 +57,25 @@ class IntelligentMethodOptionResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return 'Opsi Metode Intelijen';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Opsi Metode Intelijen';
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'info';
     }
 }

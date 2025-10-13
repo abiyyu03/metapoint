@@ -22,7 +22,7 @@ class AgentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Identification;
     protected static ?string $recordTitleAttribute = 'Agent';
-    protected static ?string $navigationLabel = 'Data Agen';
+    protected static ?string $navigationLabel = 'Agen';
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema

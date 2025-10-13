@@ -9,8 +9,8 @@ use Filament\Resources\Pages\ListRecords;
 class ListTargetEvaluationAttitudes extends ListRecords
 {
     protected static string $resource = TargetEvaluationAttitudeResource::class;
-    protected static ?string $breadcrumb = 'List Klasifikasi';
-    protected static ?string $title = 'Master Data Klasifikasi Target';
+    protected static ?string $breadcrumb = 'List';
+    protected static ?string $title = 'Klasifikasi Target';
 
     protected function getHeaderActions(): array
     {

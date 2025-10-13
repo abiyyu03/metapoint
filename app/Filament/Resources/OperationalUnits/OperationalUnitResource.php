@@ -15,18 +15,17 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class OperationalUnitResource extends Resource
 {
     protected static ?string $model = OperationalUnit::class;
-
     protected static string|BackedEnum|null $navigationIcon = Heroicon::BuildingOffice;
-
     protected static ?string $recordTitleAttribute = 'Unit Operasional';
     protected static ?string $navigationLabel = 'Unit Operasional';
     protected static ?int $navigationSort = 1;
-
-
+    protected static string | UnitEnum | null $navigationGroup = 'Master Data';
+    protected static ?string $slug = '/master/unit-operasional';
 
     public static function form(Schema $schema): Schema
     {
@@ -40,9 +39,7 @@ class OperationalUnitResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -60,5 +57,25 @@ class OperationalUnitResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return 'Unit Operasional';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Unit Operasional';
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'info';
     }
 }

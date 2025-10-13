@@ -15,14 +15,17 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
-
     protected static string|BackedEnum|null $navigationIcon = Heroicon::UserGroup;
-
-    protected static ?string $recordTitleAttribute = 'Roles';
+    protected static ?string $recordTitleAttribute = 'Role';
+    protected static ?string $navigationLabel = 'Role';
+    protected static ?int $navigationSort = 3;
+    protected static string|UnitEnum|null $navigationGroup = 'Master Data';
+    protected static ?string $slug = '/master/role';
 
     public static function form(Schema $schema): Schema
     {
@@ -36,9 +39,7 @@ class RoleResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -56,5 +57,25 @@ class RoleResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return 'Role';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Role';
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'info';
     }
 }
