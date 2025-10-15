@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\IntelligentMethodOption;
 use App\Models\OperationalUnit;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -18,6 +19,8 @@ class DatabaseSeeder extends Seeder
             OperationalUnitSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            IntelligentMethodSeeder::class,
+            IntelligentMethodOptionSeeder::class,
         ]);
     }
 }

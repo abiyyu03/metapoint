@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('agents', function (Blueprint $table) {
             $table->id();
-            $table->string("first_name");
-            $table->string("last_name");
+            $table->string("fullname");
             $table->integer("age")->default(0);
             $table->enum("gender", ["L", "P"]);
             $table->foreignId("organization_id")->nullable();

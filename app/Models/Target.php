@@ -12,8 +12,7 @@ class Target extends Model
     protected $table = 'targets';
 
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'fullname',
         'age',
         'gender',
         'organization_id',

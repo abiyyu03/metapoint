@@ -17,8 +17,7 @@ class FundraisingTargetsTable
     {
         return $table
             ->columns([
-                TextColumn::make('target_id')
-                    ->numeric()
+                TextColumn::make('target.fullname')
                     ->sortable(),
                 TextColumn::make('type')
                     ->searchable(),
@@ -26,11 +25,9 @@ class FundraisingTargetsTable
                     ->searchable(),
                 TextColumn::make('amount_unit')
                     ->searchable(),
-                TextColumn::make('method_id')
-                    ->numeric()
+                TextColumn::make('method.name')
                     ->sortable(),
-                TextColumn::make('method_option_id')
-                    ->numeric()
+                TextColumn::make('methodOption.name')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

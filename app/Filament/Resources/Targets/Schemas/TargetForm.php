@@ -21,9 +21,8 @@ class TargetForm
     {
         return $schema
             ->components([
-                TextInput::make('first_name')
-                    ->required(),
-                TextInput::make('last_name')
+                TextInput::make('fullname')
+                    ->label("Nama Lengkap")
                     ->required(),
                 TextInput::make('age')
                     ->label('Umur')
@@ -41,8 +40,7 @@ class TargetForm
                     ->options(Title::query()->pluck('name', 'id'))
                     ->label('Jabatan'),
                 Textarea::make('address')
-                    ->label('Alamat Target')
-                    ->columnSpanFull(),
+                    ->label('Alamat Target'),
                 Select::make('village_id')
                     ->searchable()
                     ->options(Village::query()->pluck('name', 'id'))
