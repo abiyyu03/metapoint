@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\TargetEvaluationAttitudes\Pages;
 
 use App\Filament\Resources\TargetEvaluationAttitudes\TargetEvaluationAttitudeResource;
+use App\Filament\Resources\Targets\TargetResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -15,8 +16,8 @@ class ListTargetEvaluationAttitudes extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
-            // ->label('New Klasifikasi'),
+            CreateAction::make()
+                ->successRedirectUrl(TargetEvaluationAttitudeResource::getUrl('index')),
         ];
     }
 }

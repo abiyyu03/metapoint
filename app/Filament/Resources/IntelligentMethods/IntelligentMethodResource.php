@@ -23,6 +23,8 @@ class IntelligentMethodResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::BookOpen;
 
+    protected bool $shouldRedirectToRecord = false;
+
     protected static ?string $recordTitleAttribute = 'Metode Intelijen';
     protected static ?string $navigationLabel = 'Metode Intelijen';
     protected static ?string $title = 'Metode Intelijen';
@@ -76,5 +78,15 @@ class IntelligentMethodResource extends Resource
     public static function getNavigationBadgeColor(): ?string
     {
         return 'info';
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function afterCreate(): void
+    {
+        $this->redirect($this->getResource()::getUrl('index'));
     }
 }

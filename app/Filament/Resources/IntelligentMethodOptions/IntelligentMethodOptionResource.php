@@ -27,6 +27,8 @@ class IntelligentMethodOptionResource extends Resource
     protected static string|UnitEnum|null $navigationGroup = 'Master Data';
     protected static ?string $slug = '/master/opsi-metode-intelijen';
 
+    protected bool $shouldRedirectToRecord = false;
+
     public static function form(Schema $schema): Schema
     {
         return IntelligentMethodOptionForm::configure($schema);
@@ -77,5 +79,15 @@ class IntelligentMethodOptionResource extends Resource
     public static function getNavigationBadgeColor(): ?string
     {
         return 'info';
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function afterCreate(): void
+    {
+        $this->redirect($this->getResource()::getUrl('index'));
     }
 }

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('villages', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->string("code")->nullable();
             $table->foreignId("district_id")->nullable();
             $table->timestamps();
         });
@@ -22,7 +21,6 @@ return new class extends Migration
         Schema::create('districts', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->string("code")->nullable();
             $table->foreignId("city_id")->nullable();
             $table->timestamps();
         });
@@ -30,7 +28,6 @@ return new class extends Migration
         Schema::create('cities', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->string("code")->nullable();
             $table->foreignId("province_id")->nullable();
             $table->timestamps();
         });
@@ -38,8 +35,6 @@ return new class extends Migration
         Schema::create('provinces', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->string("code")->nullable();
-            $table->foreignId("country_id")->nullable();
             $table->timestamps();
         });
 

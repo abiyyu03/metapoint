@@ -24,7 +24,7 @@ class TargetResource extends Resource
     protected static ?string $navigationLabel = 'Target';
     protected static ?string $slug = '/target';
     protected static ?int $navigationSort = 3;
-
+    protected bool $shouldRedirectToRecord = false;
 
     public static function form(Schema $schema): Schema
     {
@@ -63,5 +63,15 @@ class TargetResource extends Resource
     public static function getModelLabel(): string
     {
         return 'Target';
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function afterCreate(): void
+    {
+        $this->redirect($this->getResource()::getUrl('index'));
     }
 }

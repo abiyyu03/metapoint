@@ -23,8 +23,8 @@ class TargetEvaluationAttitudeResource extends Resource
 {
     /** @var class-string<\App\Models\TargetEvaluationAttitude> */
     protected static ?string $model = TargetEvaluationAttitude::class;
+    protected bool $shouldRedirectToRecord = false;
 
-    // 🔹 Navigasi di sidebar
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Flag;
     protected static ?string $navigationLabel = 'Klasifikasi Target';
     protected static ?string $recordTitleAttribute = 'name';
@@ -32,25 +32,21 @@ class TargetEvaluationAttitudeResource extends Resource
     protected static ?int $navigationSort = 3;
     protected static string|UnitEnum|null $navigationGroup = 'Master Data';
 
-    // 🔹 Form
     public static function form(Schema $schema): Schema
     {
         return TargetEvaluationAttitudeForm::configure($schema);
     }
 
-    // 🔹 Table
     public static function table(Table $table): Table
     {
         return TargetEvaluationAttitudesTable::configure($table);
     }
 
-    // 🔹 Relasi
     public static function getRelations(): array
     {
         return [];
     }
 
-    // 🔹 Halaman
     public static function getPages(): array
     {
         return [
@@ -60,14 +56,12 @@ class TargetEvaluationAttitudeResource extends Resource
         ];
     }
 
-    // 🔹 Hapus global scope soft delete
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
         return parent::getRecordRouteBindingEloquentQuery()
             ->withoutGlobalScopes([SoftDeletingScope::class]);
     }
 
-    // 🔹 Label di UI Filament
     public static function getPluralLabel(): ?string
     {
         return 'Klasifikasi Target';
@@ -78,7 +72,6 @@ class TargetEvaluationAttitudeResource extends Resource
         return 'Klasifikasi Target';
     }
 
-    // 🔹 Badge di sidebar
     public static function getNavigationBadge(): ?string
     {
         return (string) static::getModel()::count();
@@ -87,5 +80,15 @@ class TargetEvaluationAttitudeResource extends Resource
     public static function getNavigationBadgeColor(): ?string
     {
         return 'info';
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function afterCreate(): void
+    {
+        $this->redirect($this->getResource()::getUrl('index'));
     }
 }
