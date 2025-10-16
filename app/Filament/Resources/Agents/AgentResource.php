@@ -19,10 +19,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class AgentResource extends Resource
 {
     protected static ?string $model = Agent::class;
+    protected bool $shouldRedirectToRecord = false;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Identification;
     protected static ?string $recordTitleAttribute = 'Agent';
-    protected static ?string $navigationLabel = 'Data Agen';
+    protected static ?string $navigationLabel = 'Agen';
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
@@ -57,5 +58,15 @@ class AgentResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function afterCreate(): void
+    {
+        $this->redirect($this->getResource()::getUrl('index'));
     }
 }

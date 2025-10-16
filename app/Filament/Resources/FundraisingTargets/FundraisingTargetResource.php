@@ -25,8 +25,8 @@ class FundraisingTargetResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Penggalangan Target';
     protected static string | UnitEnum | null $navigationGroup = 'Penggalangan Dana';
-
     protected static ?string $navigationLabel = 'Target';
+    protected bool $shouldRedirectToRecord = false;
 
 
     public static function form(Schema $schema): Schema
@@ -61,5 +61,15 @@ class FundraisingTargetResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function afterCreate(): void
+    {
+        $this->redirect($this->getResource()::getUrl('index'));
     }
 }

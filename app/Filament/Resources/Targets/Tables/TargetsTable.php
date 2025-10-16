@@ -25,45 +25,32 @@ class TargetsTable
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('gender'),
-                TextColumn::make('organization_id')
+                TextColumn::make('organization.name')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('title_id')
-                    ->numeric()
+                TextColumn::make('title.name')
                     ->sortable(),
-                TextColumn::make('village_id')
-                    ->numeric()
+                TextColumn::make('village.name')
                     ->sortable(),
-                TextColumn::make('district_id')
-                    ->numeric()
+                TextColumn::make('district.name')
                     ->sortable(),
-                TextColumn::make('city_id')
-                    ->numeric()
+                TextColumn::make('city.name')
                     ->sortable(),
-                TextColumn::make('province_id')
-                    ->numeric()
+                TextColumn::make('province.name')
                     ->sortable(),
-                TextColumn::make('country_id')
-                    ->numeric()
+                TextColumn::make('country.name')
                     ->sortable(),
                 TextColumn::make('lat')
+                    ->label('Latitude')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('lng')
+                    ->label('Longitude')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('issue_id')
-                    ->numeric()
+                TextColumn::make('issue.name')
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -81,5 +68,10 @@ class TargetsTable
                     RestoreBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Target';
     }
 }

@@ -10,7 +10,7 @@ return [
 
         'register' => [
             'before' => 'atau',
-            'label' => 'mendaftar akaun',
+            'label' => 'menakaun',
         ],
 
         'request_password_reset' => [
