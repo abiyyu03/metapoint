@@ -11,6 +11,7 @@ class FundraisingTarget extends Model
     protected $table = 'fundraising_targets';
 
     protected $fillable = [
+        'target_id',
         'type',
         'unit',
         'amount_unit',
@@ -26,5 +27,10 @@ class FundraisingTarget extends Model
     public function methodOption()
     {
         return $this->belongsTo(IntelligentMethodOption::class, 'method_option_id');
+    }
+
+    public function target()
+    {
+        return $this->belongsTo(Target::class, 'target_id');
     }
 }

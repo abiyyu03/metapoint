@@ -9,9 +9,19 @@ class OperationalUnit extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'issues';
+    protected $table = 'operational_units';
 
     protected $fillable = [
         'name',
     ];
+
+    public function agents()
+    {
+        return $this->hasMany(Agent::class, 'operational_unit_id');
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'user_id');
+    }
 }

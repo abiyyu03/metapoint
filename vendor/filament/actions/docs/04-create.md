@@ -12,6 +12,7 @@ use Filament\Actions\CreateAction;
 use Filament\Forms\Components\TextInput;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->schema([
         TextInput::make('title')
             ->required()
@@ -28,6 +29,7 @@ Sometimes, you may wish to modify form data before it is finally saved to the da
 use Filament\Actions\CreateAction;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->mutateDataUsing(function (array $data): array {
         $data['user_id'] = auth()->id();
 
@@ -46,6 +48,7 @@ use Filament\Actions\CreateAction;
 use Illuminate\Database\Eloquent\Model;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->using(function (array $data, string $model): Model {
         return $model::create($data);
     })
@@ -64,6 +67,7 @@ use Filament\Actions\CreateAction;
 
 CreateAction::make()
     ->successRedirectUrl(route('posts.list'))
+    ->successRedirectUrl(route('posts.list'))
 ```
 
 If you want to redirect using the created record, use the `$record` parameter:
@@ -73,6 +77,7 @@ use Filament\Actions\CreateAction;
 use Illuminate\Database\Eloquent\Model;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->successRedirectUrl(fn (Model $record): string => route('posts.edit', [
         'post' => $record,
     ]))
@@ -90,6 +95,7 @@ To customize the title of this notification, use the `successNotificationTitle()
 use Filament\Actions\CreateAction;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->successNotificationTitle('User registered')
 ```
 
@@ -102,6 +108,7 @@ use Filament\Actions\CreateAction;
 use Filament\Notifications\Notification;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->successNotification(
        Notification::make()
             ->success()
@@ -118,6 +125,7 @@ To disable the notification altogether, use the `successNotification(null)` meth
 use Filament\Actions\CreateAction;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->successNotification(null)
 ```
 
@@ -131,6 +139,7 @@ There are several available hooks:
 use Filament\Actions\CreateAction;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->beforeFormFilled(function () {
         // Runs before the form fields are populated with their default values.
     })
@@ -164,6 +173,7 @@ use Filament\Actions\CreateAction;
 use Filament\Notifications\Notification;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->before(function (CreateAction $action, Post $record) {
         if (! $record->team->subscribed()) {
             Notification::make()
@@ -201,6 +211,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Wizard\Step;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->steps([
         Step::make('Name')
             ->description('Give the category a unique name')
@@ -238,6 +249,7 @@ If you'd like to allow free navigation, so all the steps are skippable, use the 
 use Filament\Actions\CreateAction;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->steps([
         // ...
     ])
@@ -254,6 +266,7 @@ If you'd like to modify the "create another" action, you may use the `createAnot
 use Filament\Actions\CreateAction;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->createAnotherAction(fn (Action $action): Action => $aciton->label('Custom create another label'))
 ```
 
@@ -265,6 +278,7 @@ If you'd like to remove the "create another" button from the modal, you can use 
 use Filament\Actions\CreateAction;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->createAnother(false)
 ```
 
@@ -278,6 +292,7 @@ By default, when the user uses the "create and create another" feature, all the 
 use Filament\Actions\CreateAction;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->preserveFormDataWhenCreatingAnother(['is_admin', 'organization'])
 ```
 
@@ -288,6 +303,7 @@ use Filament\Actions\CreateAction;
 use Illuminate\Support\Arr;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->preserveFormDataWhenCreatingAnother(fn (array $data): array => Arr::only($data, ['is_admin', 'organization']))
 ```
 
@@ -297,6 +313,7 @@ To preserve all the data, return the entire `$data` array:
 use Filament\Actions\CreateAction;
 
 CreateAction::make()
+    ->successRedirectUrl(route('posts.list'))
     ->preserveFormDataWhenCreatingAnother(fn (array $data): array => $data)
 ```
 

@@ -23,9 +23,8 @@ class FundraisingAgentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::CurrencyDollar;
     protected static ?string $recordTitleAttribute = 'Penggalangan Agen';
-
     protected static string | UnitEnum | null $navigationGroup = 'Penggalangan Dana';
-
+    protected bool $shouldRedirectToRecord = false;
     protected static ?string $navigationLabel = 'Agen';
 
     public static function form(Schema $schema): Schema
@@ -60,5 +59,15 @@ class FundraisingAgentResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function afterCreate(): void
+    {
+        $this->redirect($this->getResource()::getUrl('index'));
     }
 }
