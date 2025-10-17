@@ -17,44 +17,29 @@ class AgentsTable
     {
         return $table
             ->columns([
-                TextColumn::make('first_name')
-                    ->searchable(),
-                TextColumn::make('last_name')
+                TextColumn::make('fullname')
+                    ->label('Nama Lengkap')
                     ->searchable(),
                 TextColumn::make('age')
-                    ->numeric()
+                    ->label('Umur')
+                    ->numeric(),
+                TextColumn::make('gender')
+                    ->label('Jenis Kelamin'),
+                // TextColumn::make('organization_id')
+                //     ->numeric()
+                //     ->sortable(),
+                // TextColumn::make('title_id')
+                //     ->numeric()
+                //     ->sortable(),
+                TextColumn::make('operationalUnit.name')
+                    ->label('Unit Operasional')
                     ->sortable(),
-                TextColumn::make('gender'),
-                TextColumn::make('organization_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('title_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('village_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('district_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('city_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('province_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('country_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('lat')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('lng')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('operational_unit_id')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('targets.fullname')
+                    ->label('Target')
+                    ->badge()
+                    ->color('danger')
+                    ->separator(', ')
+                    ->toggleable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
