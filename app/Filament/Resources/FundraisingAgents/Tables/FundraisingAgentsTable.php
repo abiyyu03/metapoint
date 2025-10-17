@@ -17,17 +17,20 @@ class FundraisingAgentsTable
     {
         return $table
             ->columns([
-                TextColumn::make('agent_id')
-                    ->numeric()
+                TextColumn::make('agent.fullname')
+                    ->label('Nama Agen')
                     ->sortable(),
                 TextColumn::make('type')
+                    ->label('Jenis Penggalangan')
                     ->searchable(),
                 TextColumn::make('unit')
+                    ->label('Satuan Penggalangan')
                     ->searchable(),
                 TextColumn::make('amount_unit')
                     ->searchable(),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Tanggal Dibuat')
+                    ->dateTime('d M Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
