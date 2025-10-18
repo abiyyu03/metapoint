@@ -20,16 +20,64 @@ class FundraisingTargetForm
                     ->searchable()
                     ->label('Nama Target')
                     ->required(),
-                TextInput::make('type')
-                    ->label('Tipe')
+                Select::make('type')
+                    ->label('Tipe Insentif / Dukungan')
+                    ->searchable()
+                    ->options([
+                        'finansial' => 'Finansial (uang, bantuan dana, kompensasi)',
+                        'logistik' => 'Logistik (alat, kendaraan, fasilitas, perlengkapan)',
+                        'informasi' => 'Informasi (akses data, dokumen, intel)',
+                        'proteksi' => 'Proteksi (perlindungan, jaminan keamanan)',
+                        'keistimewaan' => 'Keistimewaan (izin khusus, akses prioritas)',
+                        'pelatihan' => 'Pelatihan (training, pembinaan, peningkatan kemampuan)',
+                        'relasi' => 'Relasi (dukungan jaringan, kontak, koneksi strategis)',
+                        'lainnya' => 'Lainnya',
+                    ])
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('Nama Jenis Insentif / Dukungan Baru')
+                            ->required(),
+                    ])
+                    ->createOptionUsing(function (array $data, Select $component): string {
+                        $options = $component->getOptions();
+                        $options[$data['name']] = $data['name'];
+                        $component->options($options);
+                        return $data['name'];
+                    })
                     ->required(),
-                TextInput::make('unit')
-                    ->label('Tipe Satuan')
+
+                Select::make('unit')
+                    ->label('Tipe Satuan / Bentuk Kuantifikasi')
+                    ->searchable()
+                    ->options([
+                        'rupiah' => 'Rupiah (Rp)',
+                        'paket' => 'Paket / Item',
+                        'jam' => 'Jam',
+                        'hari' => 'Hari',
+                        'minggu' => 'Minggu',
+                        'bulan' => 'Bulan',
+                        'laporan' => 'Laporan / Informasi',
+                        'aksi' => 'Aksi / Operasi',
+                        'dukungan' => 'Dukungan / Bantuan',
+                        'poin' => 'Poin Penilaian',
+                        'lainnya' => 'Lainnya',
+                    ])
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('Nama Satuan/unit Baru')
+                            ->required(),
+                    ])
+                    ->createOptionUsing(function (array $data, Select $component): string {
+                        $options = $component->getOptions();
+                        $options[$data['name']] = $data['name'];
+                        $component->options($options);
+                        return $data['name'];
+                    })
                     ->required(),
                 TextInput::make('amount_unit')
                     ->label('Jumlah Unit')
-                    ->numeric()
-                    ->required(),
+                    ->default(1)
+                    ->numeric(),
                 Select::make('method_id')
                     ->label('Metode Intelijen')
                     ->options(IntelligentMethod::query()->pluck('name', 'id'))

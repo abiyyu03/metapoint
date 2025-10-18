@@ -33,19 +33,30 @@ class TargetForm
                     ->options(['L' => 'Laki-laki', 'P' => 'Perempuan'])
                     ->required(),
                 Select::make('organization_id')
+                    ->label('Asal Kelompok')
                     ->searchable()
                     ->options(Organization::query()->pluck('name', 'id'))
-                    ->label('Asal Kelompok'),
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('Nama Organisasi')
+                            ->required(),
+                    ])
+                    ->createOptionUsing(fn(array $data): int => Organization::create($data)->id),
                 Select::make('title_id')
+                    ->label('Jabatan')
                     ->options(Title::query()->pluck('name', 'id'))
-                    ->label('Jabatan'),
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('Nama Jabatan')
+                            ->required(),
+                    ])
+                    ->createOptionUsing(fn(array $data): int => Title::create($data)->id),
                 Textarea::make('address')
                     ->label('Alamat Target'),
                 Select::make('village_id')
                     ->searchable()
                     ->options(Village::query()->pluck('name', 'id'))
-                    ->label('Desa/Kelurahan')
-                    ->required(),
+                    ->label('Desa/Kelurahan'),
                 Select::make('district_id')
                     ->options(District::query()->pluck('name', 'id'))
                     ->label('Kecamatan')
@@ -67,10 +78,20 @@ class TargetForm
                     ->label('Negara Asal')
                     ->required(),
                 Select::make('issue_id')
+                    ->label('Isu')
                     ->searchable()
                     ->options(Issue::query()->pluck('name', 'id'))
-                    ->label('Isu')
-                    ->required(),
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('Nama Isu')
+                            ->required(),
+                    ])
+                    // ->createOptionAction(function ($form, $record, $livewire) {
+                    //     // Ketika user klik "Create", form ini akan muncul
+                    // })
+                    ->createOptionUsing(function (array $data): int {
+                        return Issue::create($data)->id;
+                    })->required(),
                 TextInput::make('lat')
                     ->label('Latitude')
                     ->required()

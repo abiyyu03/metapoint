@@ -20,14 +20,19 @@ class FundraisingTargetsTable
                 TextColumn::make('target.fullname')
                     ->sortable(),
                 TextColumn::make('type')
+                    ->label('Tipe insentif')
                     ->searchable(),
                 TextColumn::make('unit')
+                    ->label('Satuan')
                     ->searchable(),
                 TextColumn::make('amount_unit')
+                    ->label('Jumlah')
                     ->searchable(),
                 TextColumn::make('method.name')
+                    ->label('Metode')
                     ->sortable(),
                 TextColumn::make('methodOption.name')
+                    ->label('Opsi Metode')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

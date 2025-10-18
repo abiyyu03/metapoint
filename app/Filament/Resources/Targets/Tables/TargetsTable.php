@@ -17,9 +17,7 @@ class TargetsTable
     {
         return $table
             ->columns([
-                TextColumn::make('first_name')
-                    ->searchable(),
-                TextColumn::make('last_name')
+                TextColumn::make('fullname')
                     ->searchable(),
                 TextColumn::make('age')
                     ->numeric()
