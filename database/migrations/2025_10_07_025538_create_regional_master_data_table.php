@@ -35,6 +35,8 @@ return new class extends Migration
         Schema::create('provinces', function (Blueprint $table) {
             $table->id();
             $table->string("name");
+            $table->string("code")->nullable();
+            $table->foreignId("country_id")->nullable();
             $table->timestamps();
         });
 

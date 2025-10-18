@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Seeder::call([
+            CountrySeeder::class,
+            ProvinceSeeder::class,
             OperationalUnitSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
