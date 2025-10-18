@@ -70,15 +70,7 @@ class IntelligentMethodResource extends Resource
         return 'Metode Intelijen';
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        return (string) static::getModel()::count();
-    }
 
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return 'info';
-    }
 
     protected function getRedirectUrl(): string
     {

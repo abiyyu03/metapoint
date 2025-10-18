@@ -72,15 +72,7 @@ class TargetEvaluationAttitudeResource extends Resource
         return 'Klasifikasi Target';
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        return (string) static::getModel()::count();
-    }
 
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return 'info';
-    }
 
     protected function getRedirectUrl(): string
     {
