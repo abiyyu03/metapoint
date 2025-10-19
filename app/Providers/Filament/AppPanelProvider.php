@@ -39,6 +39,7 @@ class AppPanelProvider extends PanelProvider
                 Css::make('leaflet-css', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),
             ])
             ->navigationGroups([
+                'Assessment',
                 'Penggalangan Dana',
                 'Unit Operasional'
             ])

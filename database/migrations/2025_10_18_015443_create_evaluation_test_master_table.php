@@ -14,7 +14,7 @@ return new class extends Migration
         // Table: assesment_identifications
         Schema::create('assesments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name'); //bagian I - asesmen penggalang, bagian II - Profiling target penggalang
             $table->text('description')->nullable();
             $table->timestamps();
         });
@@ -23,7 +23,7 @@ return new class extends Migration
         Schema::create('assesment_sections', function (Blueprint $table) {
             $table->id();
             $table->foreignId('assesment_id');
-            $table->string('name');
+            $table->string('name'); // narasi ideologi, narasi aksi radikal, kebutuhan fisiologis, kebutuhan rasa aman
             $table->integer('order')->default(0); //urutan pertanyaan
             $table->timestamps();
         });
