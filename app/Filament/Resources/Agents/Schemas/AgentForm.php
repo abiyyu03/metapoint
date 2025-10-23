@@ -27,8 +27,7 @@ class AgentForm
                 TextInput::make('age')
                     ->label('Umur')
                     ->required()
-                    ->numeric()
-                    ->default(0),
+                    ->numeric(),
                 Select::make('gender')
                     ->options(['L' => 'Laki-laki', 'P' => 'Perempuan'])
                     ->label('Jenis Kelamin')
@@ -44,7 +43,8 @@ class AgentForm
                     ->label('Unit Operasional')
                     ->required(),
                 Textarea::make('address')
-                    ->columnSpanFull(),
+                    ->label('Alamat')
+                    ->required(),
                 Select::make('country_id')
                     ->options(Country::query()->pluck('name', 'id'))
                     ->label('Negara')
@@ -79,12 +79,12 @@ class AgentForm
                     ->required()
                     ->numeric(),
                 Select::make('targets')
+                    ->columnSpanFull()
                     ->label('Target Agent')
-                    ->multiple() 
-                    ->relationship('targets', 'fullname') 
+                    ->multiple()
+                    ->relationship('targets', 'fullname')
                     ->preload() // load cepat
                     ->searchable(),
-
             ]);
     }
 }
