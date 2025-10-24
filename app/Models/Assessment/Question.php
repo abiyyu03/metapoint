@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Assessment;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +14,7 @@ class Question extends Model
 
     public function section()
     {
-        return $this->belongsTo(AssesmentSection::class, 'assesment_section_id');
+        return $this->belongsTo(AssessmentSection::class, 'assesment_section_id');
     }
 
     public function answers()

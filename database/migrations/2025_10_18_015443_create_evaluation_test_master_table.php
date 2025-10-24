@@ -11,31 +11,35 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Table: assesment_identifications
-        Schema::create('assesments', function (Blueprint $table) {
+        // Table: assessment_identifications
+        Schema::create('assessments', function (Blueprint $table) {
             $table->id();
             $table->string('name'); //bagian I - asesmen penggalang, bagian II - Profiling target penggalang
             $table->text('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
-        // Table: assesment_titles
-        Schema::create('assesment_sections', function (Blueprint $table) {
+        // Table: assessment_titles
+        Schema::create('assessment_sections', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('assesment_id');
+            $table->foreignId('assessment_id');
+            $table->text('description')->nullable();
             $table->string('name'); // narasi ideologi, narasi aksi radikal, kebutuhan fisiologis, kebutuhan rasa aman
             $table->integer('order')->default(0); //urutan pertanyaan
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // Table: questions
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('assesment_section_id');
+            $table->foreignId('assessment_section_id');
             $table->text('value'); // pertanyaan: apa itu pancasila menurut kamu
             $table->enum('type', ['choice', 'essay']);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // Table: answers
@@ -47,6 +51,7 @@ return new class extends Migration
             $table->string('label')->nullable();
             $table->integer('value')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // Table: question_answers
@@ -57,6 +62,7 @@ return new class extends Migration
             $table->foreignId('answer_id')->nullable(); // untuk opsi choice
             $table->text('answer_value')->nullable(); // untuk essay / skor manual
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -68,7 +74,7 @@ return new class extends Migration
         Schema::dropIfExists('question_answers');
         Schema::dropIfExists('answers');
         Schema::dropIfExists('questions');
-        Schema::dropIfExists('assesment_sections');
-        Schema::dropIfExists('assesments');
+        Schema::dropIfExists('assessment_sections');
+        Schema::dropIfExists('assessments');
     }
 };

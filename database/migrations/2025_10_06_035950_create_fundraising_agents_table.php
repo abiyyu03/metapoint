@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string("unit");
             $table->string("amount_unit");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

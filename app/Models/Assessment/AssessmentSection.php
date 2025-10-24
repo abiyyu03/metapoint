@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Assessment;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AssesmentSection extends Model
+class AssessmentSection extends Model
 {
     use SoftDeletes, HasFactory;
 
@@ -14,7 +14,7 @@ class AssesmentSection extends Model
 
     public function assesment()
     {
-        return $this->belongsTo(Assesment::class);
+        return $this->belongsTo(Assessment::class);
     }
 
     public function questions()

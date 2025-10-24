@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('import_id')->constrained()->cascadeOnDelete();
             $table->text('validation_error')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
