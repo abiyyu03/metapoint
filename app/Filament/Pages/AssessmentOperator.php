@@ -5,13 +5,15 @@ namespace App\Filament\Pages;
 use App\Models\Agent;
 use App\Models\Target;
 use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
 use Filament\Support\Icons\Heroicon;
 use UnitEnum;
 use Filament\Schemas\Components\Wizard as ComponentsWizard;
@@ -24,28 +26,13 @@ class AssessmentOperator extends Page
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocument;
     protected static string|UnitEnum|null $navigationGroup = 'Assessment';
 
-
-    public ?array $data = []; // Tempat simpan sementara jawaban
-
-    public function mount(): void
-    {
-        // jika ada draft di session, muat ke form
-        $draft = session()->get('assessment_draft', null);
-        if ($draft && is_array($draft)) {
-            $this->data = $draft;
-            $this->form->fill($this->data);
-        } else {
-            $this->form->fill();
-        }
-    }
-
     protected function getFormSchema(): array
     {
         return [
             ComponentsWizard::make([
                 // STEP 1: PILIH TARGET DAN AGEN
-                WizardStep::make('Data Target dan Agen')
-                    ->description('Pilih target yang akan dinilai dan agen penilainya.')
+                WizardStep::make('Pilih Target dan Agen')
+                    ->description('Target yang dinilai dan agennya.')
                     ->schema([
                         Select::make('target_id')
                             ->label('Pilih Target')
@@ -59,333 +46,433 @@ class AssessmentOperator extends Page
                             ->required(),
                     ]),
 
-                // STEP 2: IKB (6 pertanyaan choice 0-2)
-                WizardStep::make('IKB')
-                    ->description('Indikator Kesediaan Bekerjasama Target Penggalangan (skala)')
+                // STEP 2: Asesmen Penggalangan
+                WizardStep::make('Assesmen Penggalangan')
+                    ->description('IKB, PTP, AM-I, AM-II')
                     ->schema([
-                        Radio::make('am_i_q1')
-                            ->label('1. Target penggalangan bersedia melakukan kontak dengan penggalang?')
-                            ->options([
-                                0 => '0 = Tidak',
-                                1 => '1 = Ya',
+                        Section::make('A. Indikator Kesediaan Bekerjasama Target Penggalangan (IKB)')
+                            ->description('6 Pertanyaan')
+                            ->collapsible()
+                            ->collapsed()
+                            ->columns(2)
+                            ->afterHeader([
+                                ViewAction::make('role_supervisor')
+                                    ->view('filament.forms.actions.role-badge-supervisor')
                             ])
-                            ->required(),
+                            ->schema([
+                                Radio::make('ikb_q1')
+                                    ->label('1. Target penggalangan bersedia melakukan kontak dengan penggalang?')
+                                    ->options([
+                                        0 => '0 = Tidak',
+                                        1 => '1 = Ya',
+                                    ])
+                                    ->required(),
 
-                        Radio::make('am_i_q2')
-                            ->label('2. Seberapa baik kualitas kontak antara target penggalangan dengan penggalang (meskipun tidak rutin)?')
-                            ->options([
-                                0 => '0 = Tidak Baik',
-                                1 => '1 = Baik',
-                                2 => '2 = Sangat Baik',
-                            ])
-                            ->required(),
+                                Radio::make('ikb_q2')
+                                    ->label('2. Seberapa baik kualitas kontak antara target penggalangan dengan penggalang (meskipun tidak rutin)?')
+                                    ->options([
+                                        0 => '0 = Tidak Baik',
+                                        1 => '1 = Baik',
+                                        2 => '2 = Sangat Baik',
+                                    ])
+                                    ->required(),
 
-                        Radio::make('am_i_q3')
-                            ->label('3. Target penggalangan bersedia memberikan informasi kepada penggalang?')
-                            ->options([
-                                0 => '0 = Tidak',
-                                1 => '1 = Ya',
-                            ])
-                            ->required(),
+                                Radio::make('ikb_q3')
+                                    ->label('3. Target penggalangan bersedia memberikan informasi kepada penggalang?')
+                                    ->options([
+                                        0 => '0 = Tidak',
+                                        1 => '1 = Ya',
+                                    ])
+                                    ->required(),
 
-                        Radio::make('am_i_q4')
-                            ->label('4. Target penggalangan bersedia menerima arahan atau narasi dari penggalang?')
-                            ->options([
-                                0 => '0 = Tidak',
-                                1 => '1 = Ya',
+                                Radio::make('ikb_q4')
+                                    ->label('4. Target penggalangan bersedia menerima arahan atau narasi dari penggalang?')
+                                    ->options([
+                                        0 => '0 = Tidak',
+                                        1 => '1 = Ya',
+                                    ])
+                                    ->required(),
+                                Radio::make('ikb_q5')
+                                    ->label('5. Target penggalangan bersedia mengikuti program yang ditetapkan oleh penggalang?')
+                                    ->options([
+                                        0 => '0 = Tidak',
+                                        1 => '1 = Ya',
+                                    ])
+                                    ->required(),
+                                Radio::make('ikb_q6')
+                                    ->label('6. Secara keseluruhan, apakah target penggalangan bersedia bekerjasama dengan penggalang?')
+                                    ->options([
+                                        0 => '0 = Tidak',
+                                        1 => '1 = Ya',
+                                    ])
+                                    ->required(),
+                            ]),
+                        Section::make('B. Performa Target Penggalangan (PTP)')
+                            ->description('3 Pertanyaan')
+                            ->collapsible()
+                            ->collapsed()
+                            ->columns(2)
+                            ->afterHeader([
+                                ViewAction::make('role_supervisor')
+                                    ->view('filament.forms.actions.role-badge-supervisor')
                             ])
-                            ->required(),
-                        Radio::make('am_i_q5')
-                            ->label('5. Target penggalangan bersedia mengikuti program yang ditetapkan oleh penggalang?')
-                            ->options([
-                                0 => '0 = Tidak',
-                                1 => '1 = Ya',
+                            ->schema([
+                                Radio::make('ptp_1')
+                                    ->label('1. Seberapa baik kualitas kontak antara target penggalangan dengan penggalang (meskipun tidak rutin)?')
+                                    ->options([
+                                        0 => '0 = Tidak Pernah',
+                                        1 => '1 = Jarang',
+                                        2 => '2 = Sering',
+                                    ])
+                                    ->required(),
+                                Radio::make('ptp_2')
+                                    ->label('2. Seberapa bersedia target penggalangan mengikuti arahan dan instruksi dalam melaksanakan tugas-tugas dari penggalang?')
+                                    ->options([
+                                        0 => '0 = Tidak Baik',
+                                        1 => '1 = Baik',
+                                        2 => '2 = Sangat Baik',
+                                    ])
+                                    ->required(),
+                                Radio::make('ptp_3')
+                                    ->label('3. Seberapa konsisten target penggalangan dalam bekerjasama dengan penggalang?')
+                                    ->options([
+                                        0 => '0 = Tidak Konsisten',
+                                        1 => '1 = Konsisten',
+                                        2 => '2 = Sangat Konsisten',
+                                    ])
+                                    ->required(),
+                            ]),
+                        Section::make('C. Asesmen Mandiri I (AM-I)')
+                            ->description('4 Pertanyaan')
+                            ->collapsible()
+                            ->collapsed()
+                            ->columns(2)
+                            ->afterHeader([
+                                ViewAction::make('role_penggalang')
+                                    ->view('filament.forms.actions.role-badge-penggalang')
                             ])
-                            ->required(),
-                        Radio::make('am_i_q5')
-                            ->label('6. Secara keseluruhan, apakah target penggalangan bersedia bekerjasama dengan penggalang?')
-                            ->options([
-                                0 => '0 = Tidak',
-                                1 => '1 = Ya',
+                            ->schema([
+                                Radio::make('am_i_q1')
+                                    ->label('1. Seberapa kuat hubungan antara penggalang dan target sebelum proses penggalangan dimulai?')
+                                    ->options([
+                                        0 => '0 = Rendah',
+                                        1 => '1 = Cukup',
+                                        2 => '2 = Tinggi',
+                                    ])
+                                    ->required(),
+
+                                Radio::make('am_i_q2')
+                                    ->label('2. Seberapa sering penggalang berinteraksi dengan target?')
+                                    ->options([
+                                        0 => '0 = Jarang',
+                                        1 => '1 = Kadang-kadang',
+                                        2 => '2 = Sering',
+                                    ])
+                                    ->required(),
+
+                                Radio::make('am_i_q3')
+                                    ->label('3. Seberapa besar pengaruh penggalang terhadap target dalam keputusan sehari-hari?')
+                                    ->options([
+                                        0 => '0 = Tidak Berpengaruh',
+                                        1 => '1 = Cukup Berpengaruh',
+                                        2 => '2 = Sangat Berpengaruh',
+                                    ])
+                                    ->required(),
+
+                                Radio::make('am_i_q4')
+                                    ->label('4. Sejauh mana target mempercayai penggalang dalam komunikasi mereka?')
+                                    ->options([
+                                        0 => '0 = Kurang Percaya',
+                                        1 => '1 = Cukup Percaya',
+                                        2 => '2 = Sangat Percaya',
+                                    ])
+                                    ->required(),
+                            ]),
+                        Section::make('D. Asesmen Mandiri II (AM-II)')
+                            ->description('4 Pertanyaan')
+                            ->collapsible()
+                            ->collapsed()
+                            ->columns(2)
+                            ->afterHeader([
+                                ViewAction::make('role_penggalang')
+                                    ->view('filament.forms.actions.role-badge-penggalang')
                             ])
-                            ->required(),
+                            ->schema([
+                                Textarea::make('am_ii_q1')
+                                    ->label('1. Apa saja rencana yang telah disusun dalam proses penggalangan?')
+                                    ->rows(4),
+                                Textarea::make('am_ii_q2')
+                                    ->label('2. Apa saja tahapan yang telah direncanakan dalam melakukan penggalangan?')
+                                    ->rows(4),
+                                Textarea::make('am_ii_q3')
+                                    ->label('3. Apa saja kendala yang dialami dalam proses penggalangan?')
+                                    ->rows(4),
+                                Textarea::make('am_ii_q4')
+                                    ->label('4. Estimasi pengeluaran untuk target penggalangan (Rp)')
+                                    ->rows(2),
+                            ]),
                     ]),
 
-                // STEP 3: PTP
-                WizardStep::make('PTP')
-                    ->description('Performa Target Penggalangan (skala)')
+                // STEP 3: Profiling Target Penggalangan
+                WizardStep::make('Profiling Target Penggalangan')
+                    ->description('Kepribadian, Kebutuhan, Narasi, Jejaring Sosial')
                     ->schema([
-                        Radio::make('ptp_1')
-                            ->label('1. Seberapa baik kualitas kontak antara target penggalangan dengan penggalang (meskipun tidak rutin)?')
-                            ->options([
-                                0 => '0 = Tidak Pernah',
-                                1 => '1 = Jarang',
-                                2 => '2 = Sering',
+                        Section::make('A. Kepribadian')
+                            ->description('10 Pertanyaan')
+                            ->collapsible()
+                            ->collapsed()
+                            ->columns(2)
+                            ->afterHeader([
+                                ViewAction::make('role_penggalang')
+                                    ->view('filament.forms.actions.role-badge-penggalang')
                             ])
-                            ->required(),
-                        Radio::make('ptp_2')
-                            ->label('2. Seberapa bersedia target penggalangan mengikuti arahan dan instruksi dalam melaksanakan tugas-tugas dari penggalang?')
-                            ->options([
-                                0 => '0 = Tidak Baik',
-                                1 => '1 = Baik',
-                                2 => '2 = Sangat Baik',
-                            ])
-                            ->required(),
-                        Radio::make('ptp_3')
-                            ->label('3. Seberapa konsisten target penggalangan dalam bekerjasama dengan penggalang?')
-                            ->options([
-                                0 => '0 = Tidak Konsisten',
-                                1 => '1 = Konsisten',
-                                2 => '2 = Sangat Konsisten',
-                            ])
-                            ->required(),
+                            ->schema([
+                                Radio::make('personality_q1')->label('1. Target terlihat pendiam')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('personality_q2')->label('2. Target terlihat ramah, suka bergaul')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('personality_q3')->label('3. Target cenderung suka mencari-cari kekurangan orang lain')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('personality_q4')->label('4. Target cenderung mudah percaya pada orang lain')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('personality_q5')->label('5. Target terlihat cenderung malas')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('personality_q6')->label('6. Target melakukan pekerjaan dengan teliti')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('personality_q7')->label('7. Target memiliki sedikit minat terhadap seni')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('personality_q8')->label('8. Target memiliki imajinasi yang aktif')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('personality_q9')->label('9. Target santai, mampu menangani stres dengan baik')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('personality_q10')->label('10. Target mudah merasa gugup')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                            ]),
 
+                        Section::make('B. Kebutuhan & Emosi terhadap Negara')
+                            ->description('14 Pertanyaan')
+                            ->collapsible()
+                            ->collapsed()
+                            ->columns(2)
+                            ->afterHeader([
+                                ViewAction::make('role_Penggalang')
+                                    ->view('filament.forms.actions.role-badge-Penggalang')
+                            ])
+                            ->schema([
+                                // A. Fisiologis
+                                Radio::make('fisiologis_q1')->label('1. Uang makan target tercukupi')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('fisiologis_q2')->label('2. Target memiliki asuransi kesehatan/jiwa / BPJS aktif')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('fisiologis_q3')->label('3. Target terpenuhi sandang-pangan-tempat tinggal')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
 
+                                // B. Rasa Aman
+                                Radio::make('safety_q1')->label('1. Target merasa terjamin keamanannya')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('safety_q2')->label('2. Target merasa terjamin kebutuhan finansialnya')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('safety_q3')->label('3. Target merasa mendapatkan perlindungan hukum')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+
+                                // C. Hubungan Sosial
+                                Radio::make('social_q1')->label('1. Target mendapatkan dukungan sosial dari teman dekat')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('social_q2')->label('2. Target mendapatkan dukungan sosial dari keluarga')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('social_q3')->label('3. Target mendapatkan dukungan sosial dari tetangga')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('social_q4')->label('4. Target mendapatkan dukungan sosial dari kolega kerja')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+
+                                // D. Kehormatan
+                                Radio::make('dignity_q1')->label('1. Target memiliki reputasi baik di lingkungan tempat tinggal')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('dignity_q2')->label('2. Target memiliki reputasi baik di lingkungan kerja / sosial')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('dignity_q3')->label('3. Target memiliki kepercayaan diri dan bangga akan kemampuannya')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                                Radio::make('dignity_q4')->label('4. Target merasa dirinya penting dalam lingkungan sosialnya')->options([1 => 'Ya', 0 => 'Tidak'])->required(),
+                            ]),
+
+                        Section::make('C. Narasi')
+                            ->description('8 Pertanyaan')
+                            ->collapsible()
+                            ->collapsed()
+                            ->columns(2)
+                            ->afterHeader([
+                                ViewAction::make('role_supervisor')
+                                    ->view('filament.forms.actions.role-badge-supervisor')
+                            ])
+                            ->schema([
+                                // Narasi Ideologi
+                                Textarea::make('narasi_ideologi_q1')->label('1. Bagaimana kepercayaan individu tentang peran agama dalam politik?')->rows(3),
+                                Textarea::make('narasi_ideologi_q2')->label('2. Bagaimana kepercayaan individu tentang legitimasi NKRI??')->rows(3),
+                                Textarea::make('narasi_ideologi_q3')->label('3. Bagaimana kepercayaan individu tentang penggunaan kekerasan dalam mencapai tujuan?')->rows(3),
+
+                                // Narasi Aksi Radikal
+                                Radio::make('narasi_aksi_radikal_q1')
+                                    ->label('1. Target penggalangan cenderung bersedia melakukan pelanggaran hukum (di luar arahan penggalang) ?')
+                                    ->options(
+                                        [
+                                            0 => 'Tidak',
+                                            1 => 'Ya'
+                                        ]
+                                    )
+                                    ->required(),
+
+                                Radio::make('narasi_aksi_radikal_q2')
+                                    ->label('2. Untuk mencapai tujuan politik, target penggalangan cenderung bersedia melakukan kekerasan (di luar arahan penggalang)?')
+                                    ->options([
+                                        0 => 'Tidak',
+                                        1 => 'Ya'
+                                    ])
+                                    ->required(),
+
+                                Radio::make('narasi_aksi_radikal_q3')
+                                    ->label('3. Target penggalangan bersedia melawan polisi (di luar arahan penggalang)?')
+                                    ->options([
+                                        0 => 'Tidak',
+                                        1 => 'Ya'
+                                    ])
+                                    ->required(),
+
+                                // Narasi Kepercayaan Pemerintah
+                                Radio::make('narasi_kepercayaan_pemerintah_q1')
+                                    ->label('1. Target penggalangan puas terhadap kinerja pemerintah?')
+                                    ->options([
+                                        0 => 'Tidak',
+                                        1 => 'Ya'
+                                    ])
+                                    ->required(),
+                                Radio::make('narasi_kepercayaan_pemerintah_q1')
+                                    ->label('2. Target penggalangan puas terhadap kebijakan pemerintah?')
+                                    ->options([
+                                        0 => 'Tidak',
+                                        1 => 'Ya'
+                                    ])
+                                    ->required(),
+                            ]),
+
+                        Section::make('D. Jejaring Sosial')
+                            ->description('12 Pertanyaan')
+                            ->collapsible()
+                            ->collapsed()
+                            ->columns(2)
+                            ->afterHeader([
+                                ViewAction::make('role_supervisor')
+                                    ->view('filament.forms.actions.role-badge-supervisor')
+                            ])
+                            ->schema([
+                                // A. Relasi Interpersonal
+                                Radio::make('narasi_relasi_interpersonal_q1')
+                                    ->label('1. Seberapa dekat secara emosional hubungan penggalang dengan target penggalangan?')
+                                    ->options([
+                                        0 => 'Tidak Dekat Sama Sekali',
+                                        1 => 'Cukup Dekat',
+                                        2 => 'Sangat Dekat',
+                                    ])
+                                    ->required(),
+                                Radio::make('narasi_relasi_interpersonal_q2')
+                                    ->label('2. Seberapa percaya target penggalang terhadap penggalang?')
+                                    ->options([
+                                        0 => 'Tidak Percaya Sama Sekali',
+                                        1 => 'Cukup Percaya',
+                                        2 => 'Sangat Percaya',
+                                    ])
+                                    ->required(),
+                                Radio::make('narasi_relasi_interpersonal_q3')
+                                    ->label('3. Seberapa tergantung secara finansial target penggalang terhadap penggalang?')
+                                    ->options([
+                                        0 => 'Tidak Tergantung Sama Sekali',
+                                        1 => 'Cukup Tergantung',
+                                        2 => 'Sangat Tergantung',
+                                    ])
+                                    ->required(),
+                                Radio::make('narasi_relasi_interpersonal_q4')
+                                    ->label('4. Seberapa tergantung secara sosial/emosional target penggalang terhadap penggalang?')
+                                    ->options([
+                                        0 => 'Tidak Tergantung Sama Sekali',
+                                        1 => 'Cukup Tergantung',
+                                        2 => 'Sangat Tergantung',
+                                    ])
+                                    ->required(),
+
+                                // B. Sentralitas Peran Target Penggalangan
+                                Radio::make('sentralitas_peran_target_penggalangan_q1')
+                                    ->label('1. Seberapa dekat secara emosional target penggalangan dengan entitas yang disasar?')
+                                    ->options([
+                                        0 => 'Tidak Dekat Sama Sekali',
+                                        1 => 'Cukup Dekat',
+                                        2 => 'Sangat Dekat',
+                                    ])
+                                    ->required(),
+                                Radio::make('sentralitas_peran_target_penggalangan_q2')
+                                    ->label('2. Seberapa jauh akses yang dipunyai target penggalangan dengan entitas yang disasar?')
+                                    ->options([
+                                        0 => 'Tidak Ada Akses Sama Sekali',
+                                        1 => 'Terdapat Akses',
+                                        2 => 'Akses Sepenuhnya',
+                                    ])
+                                    ->required(),
+                                Radio::make('sentralitas_peran_target_penggalangan_q3')
+                                    ->label('3. Seberapa tergantung secara finansial target penggalangan terhadap entitas yang disasar?')
+                                    ->options([
+                                        0 => 'Tidak Tergantung Sama Sekali',
+                                        1 => 'Cukup Tergantung',
+                                        2 => 'Sangat Tergantung',
+                                    ])
+                                    ->required(),
+                                Radio::make('sentralitas_peran_target_penggalangan_q4')
+                                    ->label('4. Seberapa tergantung secara non-finansial target penggalangan terhadap entitas yang disasar?')
+                                    ->options([
+                                        0 => 'Tidak Tergantung Sama Sekali',
+                                        1 => 'Cukup Tergantung',
+                                        2 => 'Sangat Tergantung',
+                                    ])
+                                    ->required(),
+                                Radio::make('sentralitas_peran_target_penggalangan_q5')
+                                    ->label('5. Apakah target penggalangan bekerja dalam tim?')
+                                    ->options([
+                                        0 => 'Sendiri',
+                                        1 => 'Dalam Tim',
+                                    ])
+                                    ->required(),
+
+                                // C. Sikap Target Penggalangan
+                                Radio::make('sikap_target_penggalangan_q1')
+                                    ->label('1. Apakah target penggalangan menunjukkan rasa percaya terhadap penggalang dalam hal meminta bantuan finansial')
+                                    ->options([
+                                        0 => 'Tidak',
+                                        1 => 'Ya'
+                                    ])
+                                    ->required(),
+                                Radio::make('sikap_target_penggalangan_q2')
+                                    ->label('2. Apakah target penggalangan menunjukkan rasa percaya terhadap penggalang dalam hal meminta saran ketika menghadapi masalah')
+                                    ->options([
+                                        0 => 'Tidak',
+                                        1 => 'Ya'
+                                    ])
+                                    ->required(),
+                                Radio::make('sikap_target_penggalangan_q3')
+                                    ->label('3. Apakah target penggalangan menunjukkan rasa percaya terhadap penggalang dalam hal meminta pendapat dalam mengambil keputusan penting')
+                                    ->options([
+                                        0 => 'Tidak',
+                                        1 => 'Ya'
+                                    ])
+                                    ->required(),
+                            ]),
                     ]),
 
-                // STEP 4: Narasi
-                WizardStep::make('Narasi')
-                    ->description('Profil Target')
+                // STEP 4: Keterbacaan
+                WizardStep::make('Keterbacaan Alat Ukur')
+                    ->description('Feedback instrumen alat ukur')
                     ->schema([
-                        // Narasi Ideologi
-                        Textarea::make('narasi_ideologi_q1')->label('Bagaimana kepercayaan individu tentang peran agama dalam politik?')->rows(3),
-                        Textarea::make('narasi_ideologi_q2')->label('Bagaimana kepercayaan individu tentang legitimasi NKRI??')->rows(3),
-                        Textarea::make('narasi_ideologi_q3')->label('Bagaimana kepercayaan individu tentang penggunaan kekerasan dalam mencapai tujuan?')->rows(3),
-
-                        // Narasi Aksi Radikal
-                        Radio::make('narasi_aksi_radikal_q1')
-                            ->label('Target penggalangan cenderung bersedia melakukan pelanggaran hukum (di luar arahan penggalang) ?')
-                            ->options(
-                                [
-                                    0 => 'Tidak',
-                                    1 => 'Ya'
-                                ]
-                            )
-                            ->required(),
-
-                        Radio::make('narasi_aksi_radikal_q2')
-                            ->label('Untuk mencapai tujuan politik, target penggalangan cenderung bersedia melakukan kekerasan (di luar arahan penggalang)?')
-                            ->options([
-                                0 => 'Tidak',
-                                1 => 'Ya'
-                            ])
-                            ->required(),
-
-                        Radio::make('narasi_aksi_radikal_q3')
-                            ->label('Target penggalangan bersedia melawan polisi (di luar arahan penggalang)?')
-                            ->options([
-                                0 => 'Tidak',
-                                1 => 'Ya'
-                            ])
-                            ->required(),
-
-                        // Narasi Kepercayaan Pemerintah
-                        Radio::make('narasi_kepercayaan_pemerintah_q1')
-                            ->label('Target penggalangan puas terhadap kinerja pemerintah?')
-                            ->options([
-                                0 => 'Tidak',
-                                1 => 'Ya'
-                            ])
-                            ->required(),
-                        Radio::make('narasi_kepercayaan_pemerintah_q1')
-                            ->label('TTarget penggalangan puas terhadap kebijakan pemerintah?')
-                            ->options([
-                                0 => 'Tidak',
-                                1 => 'Ya'
-                            ])
-                            ->required(),
-
-                    ]),
-
-                // STEP 5: Jejaring Sosial
-                WizardStep::make('Jejaring Sosial')
-                    ->description('Profil Target')
-                    ->schema([
-                        // A. Relasi Interpersonal
-                        Radio::make('narasi_relasi_interpersonal_q1')
-                            ->label('Seberapa dekat secara emosional hubungan penggalang dengan target penggalangan?')
-                            ->options([
-                                0 => 'Tidak Dekat Sama Sekali',
-                                1 => 'Cukup Dekat',
-                                2 => 'Sangat Dekat',
-                            ])
-                            ->required(),
-                        Radio::make('narasi_relasi_interpersonal_q2')
-                            ->label('Seberapa percaya target penggalang terhadap penggalang?')
-                            ->options([
-                                0 => 'Tidak Percaya Sama Sekali',
-                                1 => 'Cukup Percaya',
-                                2 => 'Sangat Percaya',
-                            ])
-                            ->required(),
-                        Radio::make('narasi_relasi_interpersonal_q3')
-                            ->label('Seberapa tergantung secara finansial target penggalang terhadap penggalang?')
-                            ->options([
-                                0 => 'Tidak Tergantung Sama Sekali',
-                                1 => 'Cukup Tergantung',
-                                2 => 'Sangat Tergantung',
-                            ])
-                            ->required(),
-                        Radio::make('narasi_relasi_interpersonal_q4')
-                            ->label('Seberapa tergantung secara sosial/emosional target penggalang terhadap penggalang?')
-                            ->options([
-                                0 => 'Tidak Tergantung Sama Sekali',
-                                1 => 'Cukup Tergantung',
-                                2 => 'Sangat Tergantung',
-                            ])
-                            ->required(),
-
-                        // B. Sentralitas Peran Target Penggalangan
-                        Radio::make('sentralitas_peran_target_penggalangan_q1')
-                            ->label('Seberapa dekat secara emosional target penggalangan dengan entitas yang disasar?')
-                            ->options([
-                                0 => 'Tidak Dekat Sama Sekali',
-                                1 => 'Cukup Dekat',
-                                2 => 'Sangat Dekat',
-                            ])
-                            ->required(),
-                        Radio::make('sentralitas_peran_target_penggalangan_q2')
-                            ->label('Seberapa jauh akses yang dipunyai target penggalangan dengan entitas yang disasar?')
-                            ->options([
-                                0 => 'Tidak Ada Akses Sama Sekali',
-                                1 => 'Terdapat Akses',
-                                2 => 'Akses Sepenuhnya',
-                            ])
-                            ->required(),
-                        Radio::make('sentralitas_peran_target_penggalangan_q3')
-                            ->label('Seberapa tergantung secara finansial target penggalangan terhadap entitas yang disasar?')
-                            ->options([
-                                0 => 'Tidak Tergantung Sama Sekali',
-                                1 => 'Cukup Tergantung',
-                                2 => 'Sangat Tergantung',
-                            ])
-                            ->required(),
-                        Radio::make('sentralitas_peran_target_penggalangan_q4')
-                            ->label('Seberapa tergantung secara non-finansial target penggalangan terhadap entitas yang disasar?')
-                            ->options([
-                                0 => 'Tidak Tergantung Sama Sekali',
-                                1 => 'Cukup Tergantung',
-                                2 => 'Sangat Tergantung',
-                            ])
-                            ->required(),
-                        Radio::make('sentralitas_peran_target_penggalangan_q5')
-                            ->label('Apakah target penggalangan bekerja dalam tim?')
-                            ->options([
-                                0 => 'Sendiri',
-                                1 => 'Dalam Tim',
-                            ])
-                            ->required(),
-
-                        // C. Sikap Target Penggalangan
-                        Radio::make('sikap_target_penggalangan_q1')
-                            ->label('Apakah target penggalangan menunjukkan rasa percaya terhadap penggalang dalam hal meminta bantuan finansial')
-                            ->options([
-                                0 => 'Tidak',
-                                1 => 'Ya'
-                            ])
-                            ->required(),
-                        Radio::make('sikap_target_penggalangan_q2')
-                            ->label('Apakah target penggalangan menunjukkan rasa percaya terhadap penggalang dalam hal meminta saran ketika menghadapi masalah')
-                            ->options([
-                                0 => 'Tidak',
-                                1 => 'Ya'
-                            ])
-                            ->required(),
-                        Radio::make('sikap_target_penggalangan_q3')
-                            ->label('Apakah target penggalangan menunjukkan rasa percaya terhadap penggalang dalam hal meminta pendapat dalam mengambil keputusan penting')
-                            ->options([
-                                0 => 'Tidak',
-                                1 => 'Ya'
-                            ])
-                            ->required(),
-                    ]),
-
-                // STEP 6: Keterbacaan
-                WizardStep::make('Keterbacaan')
-                    ->description('Feedback tentang keterbacaan instrumen')
-                    ->schema([
-                        Radio::make('readability_instr')->label('1. Seberapa mudah dipahami instruksi dalam alat ukur ini?')->options([0 => '0 = Mudah', 1 => '1 = Sedikit Sulit', 2 => '2 = Sangat Sulit'])->required(),
-                        Textarea::make('readability_instr_note')->label('Jika terdapat kesulitan, jelaskan bagian instruksi yang sulit dipahami')->rows(3),
-                        Radio::make('readability_questions')->label('2. Seberapa mudah dipahami pertanyaan dalam alat ukur ini?')->options([0 => '0 = Mudah', 1 => '1 = Sedikit Sulit', 2 => '2 = Sangat Sulit'])->required(),
-                        Textarea::make('readability_questions_note')->label('Jika terdapat kesulitan, jelaskan bagian pertanyaan yang sulit dipahami')->rows(3),
+                        Radio::make('readability_q1')->label('1. Seberapa mudah dipahami instruksi dalam alat ukur ini?')->options([0 => '0 = Mudah', 1 => '1 = Sedikit Sulit', 2 => '2 = Sangat Sulit'])->required(),
+                        Textarea::make('readability_q2')->label('2. Jika terdapat kesulitan, jelaskan bagian instruksi yang sulit dipahami')->rows(3),
+                        Radio::make('readability_q3')->label('3. Seberapa mudah dipahami pertanyaan dalam alat ukur ini?')->options([0 => '0 = Mudah', 1 => '1 = Sedikit Sulit', 2 => '2 = Sangat Sulit'])->required(),
+                        Textarea::make('readability_q4')->label('4. Jika terdapat kesulitan, jelaskan bagian pertanyaan yang sulit dipahami')->rows(3),
                     ]),
 
                 // STEP 7: Review & Submit
-                WizardStep::make('Review & Submit')
-                    ->description('Tinjau jawaban sebelum menyimpan draft')
-                    ->schema([
-                        Placeholder::make('preview')
-                            ->label('Ringkasan jawaban sementara')
-                            ->content('Klik Simpan Draft untuk menyimpan sementara.')
-                    ]),
+                // WizardStep::make('Review & Submit')
+                //     ->description('Meninjau jawaban')
+                //     ->schema([
+                //         Placeholder::make('preview')
+                //             ->label('Ringkasan jawaban sementara')
+                //             ->content('Klik Simpan Draft untuk menyimpan sementara.')
+                //     ]),
 
             ])
                 ->columns(1)
                 ->skippable()
-                ->submitAction('Simpan Draft')
-                ->persistStepInQueryString()
-                ->afterStateUpdated(function ($state) {
-                    session()->put('assessment_draft', $this->form->getState());
-                })
+                ->submitAction(
+                    Action::make('save')
+                        ->label('Kirim Asesmen Akhir')
+                        ->submit('form') // Memanggil action form submit
+                )
+                // ->persistStepInQueryString()
+                // ->afterStateUpdated(function ($state) {
+                //     session()->put('assessment_draft', $this->form->getState());
+                // })
 
         ];
-    }
-
-    // protected function getSummaryHtml(): string
-    // {
-    //     $data = $this->form->getState() ?? $this->data ?? [];
-
-    //     // ringkasan sederhana: tampilkan beberapa field penting + json untuk sisa
-    //     $target = null;
-    //     if (!empty($data['target_id'])) {
-    //         $t = Target::find($data['target_id']);
-    //         $target = $t ? e($t->fullname) : '—';
-    //     }
-
-    //     $summary = '<div style="max-height:320px;overflow:auto;padding:8px;">';
-    //     $summary .= "<p><strong>Target:</strong> {$target}</p>";
-
-    //     // contoh ringkasan AM-I
-    //     if (isset($data['am_i_q1'])) {
-    //         $summary .= '<p><strong>AM-I (ringkasan):</strong> ' .
-    //             'Q1=' . e((string)$data['am_i_q1']) . ', ' .
-    //             'Q2=' . e((string)($data['am_i_q2'] ?? '-')) . ', ' .
-    //             'Q3=' . e((string)($data['am_i_q3'] ?? '-')) . ', ' .
-    //             'Q4=' . e((string)($data['am_i_q4'] ?? '-')) .
-    //             '</p>';
-    //     }
-
-    //     // tampilkan AM-II singkat (jika ada)
-    //     if (!empty($data['am_ii_plan'])) {
-    //         $summary .= '<p><strong>AM-II (rencana):</strong> ' . e(substr($data['am_ii_plan'], 0, 200)) . ((strlen($data['am_ii_plan']) > 200) ? '...' : '') . '</p>';
-    //     }
-
-    //     // sisanya: dump JSON kecil (aman untuk demo)
-    //     $summary .= '<details><summary>Show raw data</summary><pre style="white-space:pre-wrap;">' . e(json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) . '</pre></details>';
-
-    //     $summary .= '</div>';
-
-    //     return $summary;
-    // }
-
-    // public function getFormActionsAlignment(): Alignment
-    // {
-    //     return Alignment::Right;
-    // }
-
-    public function submit()
-    {
-        $this->data = $this->form->getState();
-
-        // simpan ke session (key: assessment_draft)
-        session()->put('assessment_draft', $this->data);
-
-        Notification::make()
-            ->title('Draft disimpan')
-            ->success()
-            ->send();
-
-        // refresh form state agar placeholder summary terupdate
-        $this->form->fill($this->data);
     }
 }
