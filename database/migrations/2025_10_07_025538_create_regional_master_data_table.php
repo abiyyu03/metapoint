@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string("name");
             $table->foreignId("district_id")->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('districts', function (Blueprint $table) {
@@ -24,7 +23,6 @@ return new class extends Migration
             $table->string("name");
             $table->foreignId("city_id")->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('cities', function (Blueprint $table) {
@@ -32,7 +30,6 @@ return new class extends Migration
             $table->string("name");
             $table->foreignId("province_id")->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('provinces', function (Blueprint $table) {
@@ -41,7 +38,6 @@ return new class extends Migration
             $table->string("code")->nullable();
             $table->foreignId("country_id")->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('countries', function (Blueprint $table) {
@@ -49,7 +45,6 @@ return new class extends Migration
             $table->string("name");
             $table->string("code")->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
