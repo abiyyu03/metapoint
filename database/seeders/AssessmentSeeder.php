@@ -179,36 +179,108 @@ class AssessmentSeeder extends Seeder
 
             $questions = match ($section['name']) {
                 'A. Kepribadian' => [
-                    ['value' => 'Target terlihat pendiam', 'type' => 'choice'],
-                    ['value' => 'Target terlihat ramah, suka bergaul', 'type' => 'choice'],
-                    ['value' => 'Target cenderung suka mencari-cari kekurangan orang lain', 'type' => 'choice'],
-                    ['value' => 'Target cenderung mudah percaya pada orang lain', 'type' => 'choice'],
-                    ['value' => 'Target terlihat cenderung malas', 'type' => 'choice'],
-                    ['value' => 'Target melakukan pekerjaan dengan teliti', 'type' => 'choice'],
-                    ['value' => 'Target memiliki sedikit minat terhadap seni', 'type' => 'choice'],
-                    ['value' => 'Target memiliki imajinasi yang aktif', 'type' => 'choice'],
-                    ['value' => 'Target santai, mampu menangani stres dengan baik', 'type' => 'choice'],
-                    ['value' => 'Target mudah merasa gugup', 'type' => 'choice'],
+                    ['value' => 'Target terlihat pendiam', 'type' => 'choice', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 0],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 1],
+                    ]],
+                    ['value' => 'Target terlihat ramah, suka bergaul', 'type' => 'choice', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target cenderung suka mencari-cari kekurangan orang lain', 'type' => 'choice', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 0],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 1],
+                    ]],
+                    ['value' => 'Target cenderung mudah percaya pada orang lain', 'type' => 'choice', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target terlihat cenderung malas', 'type' => 'choice', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 0],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 1],
+                    ]],
+                    ['value' => 'Target melakukan pekerjaan dengan teliti', 'type' => 'choice', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target memiliki sedikit minat terhadap seni', 'type' => 'choice', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 0],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 1],
+                    ]],
+                    ['value' => 'Target memiliki imajinasi yang aktif', 'type' => 'choice', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target santai, mampu menangani stres dengan baik', 'type' => 'choice', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 0],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 1],
+                    ]],
+                    ['value' => 'Target mudah merasa gugup', 'type' => 'choice', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
                 ],
                 'B. Kebutuhan & Emosi terhadap Negara' => [
                     // Fisiologis
-                    ['value' => 'Uang makan target tercukupi', 'type' => 'choice', 'subsection' => 'Fisiologis'],
-                    ['value' => 'Target memiliki asuransi kesehatan/jiwa / BPJS aktif', 'type' => 'choice', 'subsection' => 'Fisiologis'],
-                    ['value' => 'Target terpenuhi sandang-pangan-tempat tinggal', 'type' => 'choice', 'subsection' => 'Fisiologis'],
+                    ['value' => 'Uang makan target tercukupi', 'type' => 'choice', 'subsection' => 'Fisiologis', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target memiliki asuransi kesehatan/jiwa / BPJS aktif', 'type' => 'choice', 'subsection' => 'Fisiologis', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target terpenuhi sandang-pangan-tempat tinggal', 'type' => 'choice', 'subsection' => 'Fisiologis', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
                     // Rasa Aman
-                    ['value' => 'Target merasa terjamin keamanannya', 'type' => 'choice', 'subsection' => 'Rasa Aman'],
-                    ['value' => 'Target merasa terjamin kebutuhan finansialnya', 'type' => 'choice', 'subsection' => 'Rasa Aman'],
-                    ['value' => 'Target merasa mendapatkan perlindungan hukum', 'type' => 'choice', 'subsection' => 'Rasa Aman'],
+                    ['value' => 'Target merasa terjamin keamanannya', 'type' => 'choice', 'subsection' => 'Rasa Aman', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target merasa terjamin kebutuhan finansialnya', 'type' => 'choice', 'subsection' => 'Rasa Aman', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target merasa mendapatkan perlindungan hukum', 'type' => 'choice', 'subsection' => 'Rasa Aman', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
                     // Hubungan Sosial
-                    ['value' => 'Target mendapatkan dukungan sosial dari teman dekat', 'type' => 'choice', 'subsection' => 'Hubungan Sosial'],
-                    ['value' => 'Target mendapatkan dukungan sosial dari keluarga', 'type' => 'choice', 'subsection' => 'Hubungan Sosial'],
-                    ['value' => 'Target mendapatkan dukungan sosial dari tetangga', 'type' => 'choice', 'subsection' => 'Hubungan Sosial'],
-                    ['value' => 'Target mendapatkan dukungan sosial dari kolega kerja', 'type' => 'choice', 'subsection' => 'Hubungan Sosial'],
+                    ['value' => 'Target mendapatkan dukungan sosial dari teman dekat', 'type' => 'choice', 'subsection' => 'Hubungan Sosial', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target mendapatkan dukungan sosial dari keluarga', 'type' => 'choice', 'subsection' => 'Hubungan Sosial', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target mendapatkan dukungan sosial dari tetangga', 'type' => 'choice', 'subsection' => 'Hubungan Sosial', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target mendapatkan dukungan sosial dari kolega kerja', 'type' => 'choice', 'subsection' => 'Hubungan Sosial', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
                     // Kehormatan
-                    ['value' => 'Target memiliki reputasi baik di lingkungan tempat tinggal', 'type' => 'choice', 'subsection' => 'Kehormatan'],
-                    ['value' => 'Target memiliki reputasi baik di lingkungan kerja / sosial', 'type' => 'choice', 'subsection' => 'Kehormatan'],
-                    ['value' => 'Target memiliki kepercayaan diri dan bangga akan kemampuannya', 'type' => 'choice', 'subsection' => 'Kehormatan'],
-                    ['value' => 'Target merasa dirinya penting dalam lingkungan sosialnya', 'type' => 'choice', 'subsection' => 'Kehormatan'],
+                    ['value' => 'Target memiliki reputasi baik di lingkungan tempat tinggal', 'type' => 'choice', 'subsection' => 'Kehormatan', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target memiliki reputasi baik di lingkungan kerja / sosial', 'type' => 'choice', 'subsection' => 'Kehormatan', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target memiliki kepercayaan diri dan bangga akan kemampuannya', 'type' => 'choice', 'subsection' => 'Kehormatan', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
+                    ['value' => 'Target merasa dirinya penting dalam lingkungan sosialnya', 'type' => 'choice', 'subsection' => 'Kehormatan', 'options' => [
+                        ['label_option' => 'A', 'label' => 'Ya', 'value' => 1],
+                        ['label_option' => 'B', 'label' => 'Tidak', 'value' => 0],
+                    ]],
                 ],
                 'C. Narasi' => [
                     // Narasi Ideologi
