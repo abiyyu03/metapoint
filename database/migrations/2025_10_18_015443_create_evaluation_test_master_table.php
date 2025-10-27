@@ -46,8 +46,8 @@ return new class extends Migration
         // Table: question categories
         Schema::create('question_variables', function (Blueprint $table) {
             $table->id();
-            $table->name('name');
-            $table->name('dimension');
+            $table->string('name');
+            $table->string('dimension');
             $table->timestamps();
             $table->softDeletes();
         });
