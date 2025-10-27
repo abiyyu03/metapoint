@@ -35,9 +35,19 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('assessment_section_id');
+            $table->foreignId('question_variable_id');
             $table->text('value'); // pertanyaan: apa itu pancasila menurut kamu
             $table->enum('type', ['choice', 'essay']);
             $table->boolean('is_active')->default(true);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        // Table: question categories
+        Schema::create('question_variables', function (Blueprint $table) {
+            $table->id();
+            $table->name('name');
+            $table->name('dimension');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -53,17 +63,6 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-
-        // Table: question_answers
-        Schema::create('question_answers', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id'); // user yang mengisi
-            $table->foreignId('question_id');
-            $table->foreignId('answer_id')->nullable(); // untuk opsi choice
-            $table->text('answer_value')->nullable(); // untuk essay / skor manual
-            $table->timestamps();
-            $table->softDeletes();
-        });
     }
 
     /**
@@ -71,10 +70,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('question_answers');
         Schema::dropIfExists('answers');
         Schema::dropIfExists('questions');
         Schema::dropIfExists('assessment_sections');
         Schema::dropIfExists('assessments');
+        Schema::dropIfExists('question_variables');
     }
 };
