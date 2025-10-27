@@ -12,8 +12,8 @@ class Assessment extends Model
 
     protected $fillable = ['name', 'description'];
 
-    public function sections()
+    public function assessmentSections()
     {
-        return $this->hasMany(AssessmentSection::class, 'assesment_id');
+        return $this->hasMany(AssessmentSection::class, 'assessment_id');
     }
 }

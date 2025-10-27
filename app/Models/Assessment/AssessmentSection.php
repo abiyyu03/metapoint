@@ -10,15 +10,15 @@ class AssessmentSection extends Model
 {
     use SoftDeletes, HasFactory;
 
-    protected $fillable = ['assesment_id', 'name', 'order'];
+    protected $fillable = ['assessment_id ', 'name', 'description', 'order'];
 
     public function assessment()
     {
-        return $this->belongsTo(Assessment::class, 'assesment_id');
+        return $this->belongsTo(Assessment::class, 'assessment_id');
     }
 
     public function questions()
     {
-        return $this->hasMany(Question::class);
+        return $this->hasMany(Question::class, 'assessment_section_id');
     }
 }

@@ -10,11 +10,11 @@ class Question extends Model
 {
     use SoftDeletes, HasFactory;
 
-    protected $fillable = ['assesment_section_id', 'question_variable_id', 'code', 'value', 'type', 'is_active'];
+    protected $fillable = ['assessment_section_id ', 'question_variable_id', 'value', 'type', 'is_active'];
 
-    public function section()
+    public function assessmentSection()
     {
-        return $this->belongsTo(AssessmentSection::class, 'assesment_section_id');
+        return $this->belongsTo(AssessmentSection::class, 'assessment_section_id');
     }
 
     public function questionVariable()

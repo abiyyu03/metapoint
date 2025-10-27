@@ -27,16 +27,16 @@ class AssessmentOperator extends Page
 
     protected function getFormSchema(): array
     {
-        $assesments = Assessment::with('sections.questions.answers')
+        $assessments = Assessment::with('assessmentSections.questions.answers')
             ->orderBy('id')
             ->get();
 
         $steps = [];
 
-        foreach ($assesments as $assesment) {
+        foreach ($assessments as $assesment) {
             $sections = [];
 
-            foreach ($assesment->sections->sortBy('order') as $section) {
+            foreach ($assesment->assessmentSections->sortBy('order') as $section) {
                 $fields = [];
 
                 foreach ($section->questions as $question) {
