@@ -10,7 +10,7 @@ class Question extends Model
 {
     use SoftDeletes, HasFactory;
 
-    protected $fillable = ['assesment_section_id', 'value', 'type', 'is_active'];
+    protected $fillable = ['assesment_section_id', 'category', 'code', 'value', 'type', 'is_active'];
 
     public function section()
     {
@@ -20,10 +20,5 @@ class Question extends Model
     public function answers()
     {
         return $this->hasMany(Answer::class);
-    }
-
-    public function questionAnswers()
-    {
-        return $this->hasMany(QuestionAnswer::class);
     }
 }

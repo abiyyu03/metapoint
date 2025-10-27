@@ -14,6 +14,6 @@ class Assessment extends Model
 
     public function sections()
     {
-        return $this->hasMany(AssessmentSection::class);
+        return $this->hasMany(AssessmentSection::class, 'assesment_id');
     }
 }

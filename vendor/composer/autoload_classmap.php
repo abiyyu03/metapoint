@@ -145,6 +145,7 @@ return array(
     'App\\Models\\Title' => $baseDir . '/app/Models/Title.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Models\\Village' => $baseDir . '/app/Models/Village.php',
+    'App\\Service\\EvaluationTestTool' => $baseDir . '/app/Service/EvaluationTestTool.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'App\\Providers\\Filament\\AppPanelProvider' => $baseDir . '/app/Providers/Filament/AppPanelProvider.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',

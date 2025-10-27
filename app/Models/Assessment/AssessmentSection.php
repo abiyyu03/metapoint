@@ -12,9 +12,9 @@ class AssessmentSection extends Model
 
     protected $fillable = ['assesment_id', 'name', 'order'];
 
-    public function assesment()
+    public function assessment()
     {
-        return $this->belongsTo(Assessment::class);
+        return $this->belongsTo(Assessment::class, 'assesment_id');
     }
 
     public function questions()
