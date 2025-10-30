@@ -26,6 +26,17 @@ class Target extends Model
         'lat',
         'lng',
         'issue_id',
+        'nik',
+        'kk_number',
+        'birth_place',
+        'birth_date',
+        'phone_number',
+        'target_classification',
+        'antecedents',
+        'photo_path',
+    ];
+    protected $casts = [
+        'birth_date' => 'date',
     ];
 
     public function organization()
