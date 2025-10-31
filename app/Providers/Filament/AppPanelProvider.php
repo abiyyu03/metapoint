@@ -36,7 +36,10 @@ class AppPanelProvider extends PanelProvider
             ])
             ->assets([
                 Js::make('leaflet-js', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'),
-                Css::make('leaflet-css', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),
+                Js::make('leaflet-cluster-js', 'https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js'),
+                Css::make('leaflet-css', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),    // MarkerCluster tambahan
+                Css::make('leaflet-cluster-css', 'https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css'),
+                Css::make('leaflet-cluster-default-css', 'https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css'),
             ])
             ->navigationGroups([
                 'Assessment',

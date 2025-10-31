@@ -2,8 +2,12 @@
 
 namespace App\Models\AssessmentResult;
 
+use App\Models\Agent;
+use App\Models\Target;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use PhpParser\Node\Expr\FuncCall;
 
 class AssessmentResult extends Model
 {
@@ -19,6 +23,21 @@ class AssessmentResult extends Model
     protected $casts = [
         'issued_at' => 'datetime',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function target()
+    {
+        return $this->belongsTo(Target::class, 'target_id');
+    }
+
+    public function agent()
+    {
+        return $this->belongsTo(Agent::class, 'agent_id');
+    }
 
     public function sections()
     {

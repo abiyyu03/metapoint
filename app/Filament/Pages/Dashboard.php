@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\MapClusteringTargetAgent;
 use App\Filament\Widgets\Maps;
 use App\Filament\Widgets\TargetBehaviorChart;
 use App\Filament\Widgets\TopOrganizationsChart;
@@ -17,7 +19,7 @@ class Dashboard extends BaseDashboard
             StatsOverview::class,
             TargetBehaviorChart::class,
             TopOrganizationsChart::class,
-            Maps::class,
+            MapClusteringTargetAgent::class,
         ];
     }
 }

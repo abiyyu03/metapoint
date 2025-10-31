@@ -4,16 +4,19 @@ namespace App\Filament\Pages;
 
 use App\Models\AssessmentResult\AssessmentResult;
 use Filament\Actions\Action;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ViewField;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Illuminate\Support\Facades\Storage;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Infolists\Components\TextEntry as ComponentsTextEntry;
 use Filament\Schemas\Components\Fieldset;
+use Filament\Tables\Table;
 
 class AssessmentSubmissionDetail extends Page implements HasForms
 {
@@ -70,53 +73,46 @@ class AssessmentSubmissionDetail extends Page implements HasForms
             Section::make('Informasi Dasar Laporan')
                 ->description('Laporan Individual Penggalangan')
                 ->schema([
-                    Placeholder::make('no')->label('No:')->content($this->record->id),
-                    Placeholder::make('target_penggalangan')->label('Target Penggalangan:')->content('Target A'),
-                    Placeholder::make('penggalang')->label('Penggalang:')->content('Penggalang A'),
-                    Placeholder::make('pengambil_data')->label('Pengambil Data:')->content('Enum A'),
-                    Placeholder::make('tanggal_pengisian')->label('Tanggal Pengisian:')->content($this->record->created_at?->translatedFormat('j F Y') ?? '1 Januari 1870'),
+                    ComponentsTextEntry::make('no')->label('No:')->state($this->record->id),
+                    ComponentsTextEntry::make('target_penggalangan')->label('Target Penggalangan:')->state('Target A'),
+                    ComponentsTextEntry::make('penggalang')->label('Penggalang:')->state('Penggalang A'),
+                    ComponentsTextEntry::make('pengambil_data')->label('Pengambil Data:')->state('Enum A'),
+                    ComponentsTextEntry::make('tanggal_pengisian')->label('Tanggal Pengisian:')->state($this->record->created_at?->translatedFormat('j F Y') ?? '1 Januari 1870'),
                 ])
                 ->columns(2),
 
             // --- SECTION 2: A. ASESMEN PROSES PENGGALANGAN (Wadah Utama) ---
             Section::make('A. Asesmen Proses Penggalangan')
                 ->description('Asesmen, Kendala, dan Biaya Penggalangan.')
-                ->collapsible()
                 ->schema([
-
-                    Fieldset::make('Tabel 1: Indeks Asesmen')
+                    Fieldset::make('Proses')
                         ->schema([
-                            Repeater::make('assessment_table_1_data')
-                                ->label(false)
-                                ->disabled()
-                                ->default(fn() => $asesmenData)
-                                ->columns(5)
-                                ->schema([
-                                    TextInput::make('indeks')->columnSpan(3)->label('Indeks'),
-                                    TextInput::make('nilai')->columnSpan(1)->label('Nilai'),
-                                    TextInput::make('kategori')->columnSpan(1)->label('Kategori'),
+                            ViewField::make('kepribadian_table')
+                                ->view('filament.pages.assessment-table1', [
+                                    'data' => $asesmenData,
                                 ]),
-                        ]),
-
+                        ])
+                        ->columns(1)
+                        ->extraAttributes(['class' => 'w-full']),
                     Fieldset::make('Rencana, Kendala, dan Biaya')
                         ->schema([
-                            Placeholder::make('rencana_disusun')
+                            ComponentsTextEntry::make('rencana_disusun')
                                 ->label('Rencana yang telah Disusun')
-                                ->content('Deskripsi rencana...')->columnSpanFull(),
+                                ->state('Deskripsi rencana...')->columnSpanFull(),
 
-                            Placeholder::make('kendala')
+                            ComponentsTextEntry::make('kendala')
                                 ->label('Kendala')
-                                ->content('Deskripsi kendala...'),
+                                ->state('Deskripsi kendala...'),
 
-                            Placeholder::make('rencana_kedepan')
+                            ComponentsTextEntry::make('rencana_kedepan')
                                 ->label('Rencana ke Depan')
-                                ->content('Deskripsi rencana ke depan...'),
+                                ->state('Deskripsi rencana ke depan...'),
 
-                            Placeholder::make('uang_dikeluarkan')
+                            ComponentsTextEntry::make('uang_dikeluarkan')
                                 ->label('Uang yang telah Dikeluarkan')
-                                ->content('Rp. 50.000.000') // Nominal dari data
+                                ->state('Rp. 50.000.000') // Nominal dari data
                         ])
-                        ->columns(2), 
+                        ->columns(2),
                 ]),
 
             // --- SECTION 3: B. PROFIL TARGET PENGGALANGAN (Wadah Utama) ---
@@ -124,26 +120,45 @@ class AssessmentSubmissionDetail extends Page implements HasForms
                 ->description('Tabel-tabel profil target penggalangan.')
                 ->collapsible()
                 ->schema([
-
                     Fieldset::make('Dimensi Kepribadian')
                         ->schema([
-                            // Isi dengan Repeater atau ViewEntry Table 1 Profil
-                        ]),
+                            ViewField::make('kepribadian_table')
+                                ->view('filament.pages.assessment-table2', [
+                                    'data' => $this->getDummyAsesmenPersonality('Kepribadian'),
+                                ]),
+                        ])
+                        ->columns(1)
+                        ->extraAttributes(['class' => 'w-full']),
 
                     Fieldset::make('Dimensi Kebutuhan')
                         ->schema([
-                            // Isi dengan Repeater atau ViewEntry Table 2 Profil
-                        ]),
+                            ViewField::make('kebutuhan_table')
+                                ->view('filament.pages.assessment-table2', [
+                                    'data' => $this->getDummyAsesmenNeeds('Kebutuhan'),
+                                ]),
+                        ])
+                        ->columns(1)
+                        ->extraAttributes(['class' => 'w-full']),
 
                     Fieldset::make('Dimensi Ideologi')
                         ->schema([
-                            // Isi dengan Repeater atau ViewEntry Table 2 Profil
-                        ]),
+                            ViewField::make('ideologi_table')
+                                ->view('filament.pages.assessment-table2', [
+                                    'data' => $this->getDummyAsesmenIdeology('Ideologi'),
+                                ]),
+                        ])
+                        ->columns(1)
+                        ->extraAttributes(['class' => 'w-full']),
 
                     Fieldset::make('Dimensi Jejaring Sosial')
                         ->schema([
-                            // Isi dengan Repeater atau ViewEntry Table 2 Profil
-                        ]),
+                            ViewField::make('jejaring_table')
+                                ->view('filament.pages.assessment-table2', [
+                                    'data' => $this->getDummyAsesmenSocial('Jejaring Sosial'),
+                                ]),
+                        ])
+                        ->columns(1)
+                        ->extraAttributes(['class' => 'w-full']),
                 ]),
         ];
     }
@@ -155,6 +170,47 @@ class AssessmentSubmissionDetail extends Page implements HasForms
             ['indeks' => 'Performa Target Penggalangan', 'nilai' => 0, 'kategori' => 'Rendah'],
             ['indeks' => 'Progres Penggalangan', 'nilai' => 1, 'kategori' => 'Tinggi'],
             ['indeks' => 'Kesulitan Dalam Penggalangan', 'nilai' => 1, 'kategori' => 'Tinggi'],
+        ];
+    }
+
+    protected function getDummyAsesmenPersonality($dimension): array
+    {
+        return [
+            ['dimensi' => $dimension, 'variabel' => 'Extrovertness', 'nilai' => 1, 'kategori' => 'Tinggi'],
+            ['dimensi' => $dimension, 'variabel' => 'Agreebleness', 'nilai' => 0, 'kategori' => 'Rendah'],
+            ['dimensi' => $dimension, 'variabel' => 'Conscientiousness', 'nilai' => 1, 'kategori' => 'Tinggi'],
+            ['dimensi' => $dimension, 'variabel' => 'Openness', 'nilai' => 1, 'kategori' => 'Tinggi'],
+            ['dimensi' => $dimension, 'variabel' => 'Neuroticism', 'nilai' => 1, 'kategori' => 'Tinggi'],
+        ];
+    }
+
+    protected function getDummyAsesmenNeeds($dimension): array
+    {
+        return [
+            ['dimensi' => $dimension, 'variabel' => 'Kebutuhan Fisiologis', 'nilai' => 1, 'kategori' => 'Tinggi'],
+            ['dimensi' => $dimension, 'variabel' => 'Kebutuhan Keamanan', 'nilai' => 0, 'kategori' => 'Rendah'],
+            ['dimensi' => $dimension, 'variabel' => 'Kebutuhan Hubungan Sosial', 'nilai' => 1, 'kategori' => 'Tinggi'],
+            ['dimensi' => $dimension, 'variabel' => 'Kebutuhan akan Kehormatan', 'nilai' => 1, 'kategori' => 'Tinggi'],
+            ['dimensi' => $dimension, 'variabel' => 'Emosi Positif terhadap Negara', 'nilai' => 1, 'kategori' => 'Tinggi'],
+            ['dimensi' => $dimension, 'variabel' => 'Emosi Negatif terhadap Negara', 'nilai' => 1, 'kategori' => 'Tinggi'],
+        ];
+    }
+    protected function getDummyAsesmenIdeology($dimension): array
+    {
+        return [
+            ['dimensi' => $dimension, 'variabel' => 'Agama', 'nilai' => 1, 'kategori' => 'Tinggi'],
+            ['dimensi' => $dimension, 'variabel' => 'NKRI', 'nilai' => 0, 'kategori' => 'Rendah'],
+            ['dimensi' => $dimension, 'variabel' => 'Kekerasan', 'nilai' => 1, 'kategori' => 'Tinggi'],
+            ['dimensi' => $dimension, 'variabel' => 'Aksi Radikal', 'nilai' => 1, 'kategori' => 'Tinggi'],
+            ['dimensi' => $dimension, 'variabel' => 'Kepercayaan terhadap Pemerintah', 'nilai' => 1, 'kategori' => 'Tinggi'],
+        ];
+    }
+    protected function getDummyAsesmenSocial($dimension): array
+    {
+        return [
+            ['dimensi' => $dimension, 'variabel' => 'Relasi Interpersonal', 'nilai' => 1, 'kategori' => 'Tinggi'],
+            ['dimensi' => $dimension, 'variabel' => 'Sentralitas Peran Target Penggalangan', 'nilai' => 0, 'kategori' => 'Rendah'],
+            ['dimensi' => $dimension, 'variabel' => 'Sikap Target Penggalangan', 'nilai' => 1, 'kategori' => 'Tinggi'],
         ];
     }
 }

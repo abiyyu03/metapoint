@@ -1,14 +1,18 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-        <div style="height: 500px;" wire:ignore>
-            {{-- Muat CSS dan JS langsung di sini biar pasti tampil --}}
+        <div wire:ignore style="height: 500px;">
+            {{-- Muat CSS & JS --}}
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
             <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
             <div id="map" style="height: 100%; border-radius: 10px; z-index: 1;"></div>
 
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
+                document.addEventListener('livewire:load', function() {
+                    // Cegah inisialisasi ganda
+                    if (document.getElementById('map').dataset.initialized) return;
+                    document.getElementById('map').dataset.initialized = true;
+
                     // Inisialisasi peta
                     var map = L.map('map').setView([-2.5, 118], 5);
 
@@ -69,7 +73,8 @@
                     agents.forEach(a => {
                         L.marker([a.lat, a.lng], {
                                 icon: agentIcon
-                            }).addTo(map)
+                            })
+                            .addTo(map)
                             .bindPopup(`<b>${a.name}</b><br><i>Tipe: Agen</i>`);
                     });
 
@@ -77,12 +82,12 @@
                     targets.forEach(t => {
                         L.marker([t.lat, t.lng], {
                                 icon: targetIcon
-                            }).addTo(map)
+                            })
+                            .addTo(map)
                             .bindPopup(`<b>${t.name}</b><br><i>Tipe: Target</i>`);
                     });
                 });
             </script>
         </div>
-
     </x-filament::section>
 </x-filament-widgets::widget>

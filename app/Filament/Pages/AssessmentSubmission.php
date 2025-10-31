@@ -30,17 +30,32 @@ class AssessmentSubmission extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(AssessmentResult::query())
+            ->query(AssessmentResult::query()->with(['user', 'target', 'agent']))
             ->columns([
-                TextColumn::make('user_id')->label('User'),
-                TextColumn::make('target_id')->label('Nama Target'),
-                TextColumn::make('agent_id')->label('Nama Agen'),
-                TextColumn::make('issued_at')->label('Submit pada')->dateTime(),
+                TextColumn::make('user.name')
+                    ->label('User')
+                    ->sortable()
+                    ->searchable(),
+
+                TextColumn::make('target.name')
+                    ->label('Nama Target')
+                    ->sortable()
+                    ->searchable(),
+
+                TextColumn::make('agent.name')
+                    ->label('Nama Agen')
+                    ->sortable()
+                    ->searchable(),
+
+                TextColumn::make('issued_at')
+                    ->label('Submit pada')
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
                 TrashedFilter::make(),
             ])
-            ->actions([
+            ->recordActions([
                 Action::make('lihat_detail')
                     ->label('Lihat Detail')
                     ->icon('heroicon-o-eye')
@@ -52,6 +67,6 @@ class AssessmentSubmission extends Page implements HasTable
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                 ]),
-            ]);;
+            ]);
     }
 }
