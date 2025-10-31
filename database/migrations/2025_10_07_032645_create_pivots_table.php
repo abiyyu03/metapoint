@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId("agent_id");
             $table->foreignId("target_id");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

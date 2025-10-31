@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId("method_id");
             $table->foreignId("method_option_id");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->float("lng");
             $table->foreignId("operational_unit_id");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

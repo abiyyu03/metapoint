@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -17,37 +18,39 @@ class TargetsTable
     {
         return $table
             ->columns([
+                ImageColumn::make('photo_path')
+                    ->label('Foto')
+                    ->width(50)
+                    ->height(50)
+                    ->disk('public')
+                    ->circular(),
                 TextColumn::make('fullname')
-                    ->searchable(),
-                TextColumn::make('age')
-                    ->numeric()
+                    ->label('Nama Lengkap')
+                    ->searchable()
+                    ->sortable()
+                    ->description(function ($record): string {
+                        $gender = $record->gender === 'L' ? 'Laki-laki' : 'Perempuan';
+                        $age = $record->age ?? 'N/A';
+
+                        return "{$gender} ({$age} Tahun)";
+                    }),
+                TextColumn::make('target_classification')
+                    ->label('Klasifikasi')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'kontra' => 'danger',
+                        'netral' => 'gray',
+                        'pro' => 'success',
+                        default => 'white',
+                    })
                     ->sortable(),
-                TextColumn::make('gender'),
                 TextColumn::make('organization.name')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('title.name')
-                    ->sortable(),
-                TextColumn::make('village.name')
-                    ->sortable(),
-                TextColumn::make('district.name')
-                    ->sortable(),
-                TextColumn::make('city.name')
-                    ->sortable(),
-                TextColumn::make('province.name')
-                    ->sortable(),
-                TextColumn::make('country.name')
-                    ->sortable(),
-                TextColumn::make('lat')
-                    ->label('Latitude')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('lng')
-                    ->label('Longitude')
-                    ->numeric()
+                    ->label('Kelompok')
                     ->sortable(),
                 TextColumn::make('issue.name')
-                    ->sortable(),
+                    ->label('Isu Utama')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

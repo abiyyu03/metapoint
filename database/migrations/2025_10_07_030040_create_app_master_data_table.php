@@ -16,30 +16,35 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->string("name");
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('titles', function (Blueprint $table) {
             $table->id();
             $table->string("name");
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('issues', function (Blueprint $table) {
             $table->id();
             $table->string("name");
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('intelligent_methods', function (Blueprint $table) {
             $table->id();
             $table->string("name");
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('intelligent_method_options', function (Blueprint $table) {
@@ -47,12 +52,14 @@ return new class extends Migration
             $table->string("name");
             $table->foreignId("intelligent_method_id")->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('target_evaluation_attitudes', function (Blueprint $table) {
             $table->id();
             $table->string("name");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

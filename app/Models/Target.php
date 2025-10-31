@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\AssessmentResult\AssessmentResult;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -26,6 +27,17 @@ class Target extends Model
         'lat',
         'lng',
         'issue_id',
+        'nik',
+        'kk_number',
+        'birth_place',
+        'birth_date',
+        'phone_number',
+        'target_classification',
+        'antecedents',
+        'photo_path',
+    ];
+    protected $casts = [
+        'birth_date' => 'date',
     ];
 
     public function organization()
@@ -77,5 +89,10 @@ class Target extends Model
     public function fundraisingTargets()
     {
         return $this->hasMany(FundraisingTarget::class, 'target_id');
+    }
+
+    public function assessmentResults()
+    {
+        return $this->hasMany(AssessmentResult::class, 'target_id');
     }
 }

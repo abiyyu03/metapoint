@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\AssessmentResult\AssessmentResult;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -56,5 +58,10 @@ class User extends Authenticatable
     public function operationalUnit()
     {
         return $this->belongsTo(OperationalUnit::class, 'operational_unit_id');
+    }
+
+    public function assessmentResults()
+    {
+        return $this->hasMany(AssessmentResult::class, 'user_id');
     }
 }

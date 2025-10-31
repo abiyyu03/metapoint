@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             IntelligentMethodSeeder::class,
             IntelligentMethodOptionSeeder::class,
+            AssessmentQuestionVariableSeeder::class,
+            AssessmentSeeder::class,
         ]);
     }
 }

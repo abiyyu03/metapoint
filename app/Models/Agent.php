@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\AssessmentResult\AssessmentResult;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -76,5 +77,10 @@ class Agent extends Model
     public function fundraisingAgents()
     {
         return $this->hasMany(FundraisingAgent::class, 'agent_id');
+    }
+
+    public function assessmentResults()
+    {
+        return $this->hasMany(AssessmentResult::class, 'agent_id');
     }
 }
