@@ -25,50 +25,68 @@ class AssessmentOperator extends Page
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocument;
     protected static string|UnitEnum|null $navigationGroup = 'Assessment';
 
+    public ?int $targetId = null;
+    public ?int $agentId = null;
+
+    public function mount(): void
+    {
+        // Pastikan form punya state awal
+        $this->form->fill();
+    }
+
     protected function getFormSchema(): array
     {
-        $assessments = Assessment::with('assessmentSections.questions.answers')
-            ->orderBy('id')
-            ->get();
+        // Ambil semua assessment dengan relasi lengkap dan urutan sesuai kebutuhan
+        $assessments = Assessment::with([
+            'assessmentSections.questions.answers' => fn($q) => $q->orderBy('order')
+        ])->orderBy('id')->get();
 
-        $steps = [];
+        // Buat langkah-langkah wizard berdasarkan data assessment
+        $steps = $assessments->map(function ($assessment) {
+            $sections = $assessment->assessmentSections
+                ->sortBy('order')
+                ->map(function ($section) {
+                    $fields = $section->questions->map(function ($question) {
+                        if ($question->type === 'choice') {
+                            $options = $question->answers
+                                ->sortBy('order')
+                                ->pluck('label', 'id')
+                                ->mapWithKeys(fn($label, $id) => [(string) $id => $label])
+                                ->toArray();
 
-        foreach ($assessments as $assesment) {
-            $sections = [];
+                            return Radio::make("question_{$question->id}")
+                                ->label($question->value)
+                                ->options($options)
+                                ->required()
+                                ->columns(2);
+                        }
 
-            foreach ($assesment->assessmentSections->sortBy('order') as $section) {
-                $fields = [];
-
-                foreach ($section->questions as $question) {
-                    if ($question->type === 'choice') {
-                        $options = $question->answers
-                            ->sortBy('order')
-                            ->pluck('label', 'id')
-                            ->toArray();
-
-                        $fields[] = Radio::make("question_{$question->id}")
-                            ->label($question->value)
-                            ->options($options)
-                            ->required()
-                            ->columns(2);
-                    } else {
-                        $fields[] = Textarea::make("question_{$question->id}")
+                        return Textarea::make("question_{$question->id}")
                             ->label($question->value)
                             ->rows(3)
-                            ->required(false);
-                    }
-                }
+                            ->nullable();
+                    })->toArray();
 
-                $sections[] = Section::make($section->name)
-                    ->collapsible()
-                    ->collapsed()
-                    ->schema($fields);
-            }
 
-            $steps[] = WizardStep::make($assesment->name)
-                ->description($assesment->description)
+                    return Section::make($section->name)
+                        ->collapsible()
+                        ->collapsed()
+                        ->schema($fields);
+                })->toArray();
+
+            return WizardStep::make($assessment->name)
+                ->description($assessment->description)
                 ->schema($sections);
-        }
+        })->toArray();
+
+        // Ambil data untuk select dengan casting id ke string (menghindari invalid binding)
+        $targetOptions = Target::pluck('fullname', 'id')
+            ->mapWithKeys(fn($name, $id) => [(string) $id => $name])
+            ->toArray();
+
+        $agentOptions = Agent::pluck('fullname', 'id')
+            ->mapWithKeys(fn($name, $id) => [(string) $id => $name])
+            ->toArray();
 
         return [
             ComponentsWizard::make(array_merge(
@@ -78,21 +96,30 @@ class AssessmentOperator extends Page
                         ->schema([
                             Select::make('target_id')
                                 ->label('Pilih Target')
-                                ->options(Target::pluck('fullname', 'id'))
+                                ->options($targetOptions)
                                 ->searchable()
-                                ->required(),
+                                ->placeholder('Pilih salah satu target')
+                                ->helperText('Pastikan memilih data yang benar')
+                                ->required()
+                                ->reactive(),
                             Select::make('agent_id')
                                 ->label('Pilih Agen')
-                                ->options(Agent::pluck('fullname', 'id'))
+                                ->options($agentOptions)
                                 ->searchable()
-                                ->required(),
-                        ])
+                                ->placeholder('Pilih salah satu agen')
+                                ->helperText('Pastikan memilih data yang benar')
+                                ->required()
+                                ->reactive(),
+                        ]),
                 ],
                 $steps
             ))
                 ->submitAction(
                     Action::make('submit')
                         ->label('Kirim Assessment')
+                        // ->action(function (array $data) {
+                        //     dd($data); // Lihat apakah data muncul di sini
+                        // })
                         ->submit('form')
                 ),
         ];

@@ -13,6 +13,7 @@ use Filament\PanelProvider;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentAsset;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -24,6 +25,20 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AppPanelProvider extends PanelProvider
 {
+
+    public function boot(): void
+    {
+        // Registrasi asset global Filament
+        FilamentAsset::register([
+            // CSS
+            Css::make('leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),
+            Css::make('markercluster', 'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css'),
+
+            // JS
+            Js::make('leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'),
+            Js::make('markercluster', 'https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js'),
+        ]);
+    }
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -33,13 +48,6 @@ class AppPanelProvider extends PanelProvider
             ->login()
             ->colors([
                 'primary' => '#3b82f6',
-            ])
-            ->assets([
-                Js::make('leaflet-js', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'),
-                Js::make('leaflet-cluster-js', 'https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js'),
-                Css::make('leaflet-css', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),    // MarkerCluster tambahan
-                Css::make('leaflet-cluster-css', 'https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css'),
-                Css::make('leaflet-cluster-default-css', 'https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css'),
             ])
             ->navigationGroups([
                 'Assessment',

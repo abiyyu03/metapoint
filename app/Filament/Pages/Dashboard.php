@@ -19,7 +19,6 @@ class Dashboard extends BaseDashboard
             StatsOverview::class,
             TargetBehaviorChart::class,
             TopOrganizationsChart::class,
-            MapClusteringTargetAgent::class,
         ];
     }
 }
