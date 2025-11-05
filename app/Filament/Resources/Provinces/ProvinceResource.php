@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Provinces;
 
+use App\Filament\Clusters\Wilayah\WilayahCluster;
 use App\Filament\Resources\Provinces\Pages\CreateProvince;
 use App\Filament\Resources\Provinces\Pages\EditProvince;
 use App\Filament\Resources\Provinces\Pages\ListProvinces;
@@ -22,11 +23,11 @@ class ProvinceResource extends Resource
     protected static ?string $model = Province::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Map;
     protected static ?string $recordTitleAttribute = 'name';
-    protected static string|UnitEnum|null $navigationGroup = 'Master Data';
+    protected static ?string $cluster = WilayahCluster::class;
     protected static ?string $navigationLabel = 'Provinsi';
     protected static ?string $modelLabel = 'Provinsi';
     protected static ?string $pluralModelLabel = 'Provinsi';
-    protected static ?int $navigationSort = 11;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
     {

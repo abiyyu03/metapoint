@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Assessment\Assessments;
 
+use App\Filament\Clusters\Assesment\AssesmentCluster;
 use App\Filament\Resources\Assessment\Assessments\Pages\CreateAssessment;
 use App\Filament\Resources\Assessment\Assessments\Pages\EditAssessment;
 use App\Filament\Resources\Assessment\Assessments\Pages\ListAssessments;
@@ -21,10 +22,11 @@ class AssessmentResource extends Resource
 {
     protected static ?string $model = Assessment::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::FolderOpen;
     protected static ?string $recordTitleAttribute = 'Asesment';
-    protected static string|UnitEnum|null $navigationGroup = 'Asesment Master Data';
+    protected static ?string $navigationLabel = 'Judul Asesmen';
+    protected static ?int $navigationSort = 1;
+    protected static ?string $cluster = AssesmentCluster::class;
 
     public static function form(Schema $schema): Schema
     {

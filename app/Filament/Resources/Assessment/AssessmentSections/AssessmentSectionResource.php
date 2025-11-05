@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Assessment\AssessmentSections;
 
+use App\Filament\Clusters\Assesment\AssesmentCluster;
 use App\Filament\Resources\Assessment\AssessmentSections\Pages\CreateAssessmentSection;
 use App\Filament\Resources\Assessment\AssessmentSections\Pages\EditAssessmentSection;
 use App\Filament\Resources\Assessment\AssessmentSections\Pages\ListAssessmentSections;
@@ -21,10 +22,11 @@ class AssessmentSectionResource extends Resource
 {
     protected static ?string $model = AssessmentSection::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Bars3BottomLeft;
     protected static ?string $recordTitleAttribute = 'Sub Asesment';
-    protected static string|UnitEnum|null $navigationGroup = 'Asesment Master Data';
+    protected static ?string $navigationLabel = 'Bagian Asesmen';
+    protected static ?int $navigationSort = 2;
+    protected static ?string $cluster = AssesmentCluster::class;
 
     public static function form(Schema $schema): Schema
     {

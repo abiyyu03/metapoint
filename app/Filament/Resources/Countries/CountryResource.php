@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Countries;
 
+use App\Filament\Clusters\Wilayah\WilayahCluster;
 use App\Filament\Resources\Countries\Pages\CreateCountry;
 use App\Filament\Resources\Countries\Pages\EditCountry;
 use App\Filament\Resources\Countries\Pages\ListCountries;
@@ -22,11 +23,11 @@ class CountryResource extends Resource
     protected static ?string $model = Country::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::GlobeAlt;
     protected static ?string $recordTitleAttribute = 'name';
-    protected static string|UnitEnum|null $navigationGroup = 'Master Data';
+    protected static ?string $cluster = WilayahCluster::class;
     protected static ?string $navigationLabel = 'Negara';
     protected static ?string $modelLabel = 'Negara';
     protected static ?string $pluralModelLabel = 'Negara';
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 1;
     public static function form(Schema $schema): Schema
     {
         return CountryForm::configure($schema);

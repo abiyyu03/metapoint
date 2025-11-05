@@ -19,11 +19,11 @@ class StatsOverview extends StatsOverviewWidget
         $assessmentResult = AssessmentResult::count();
         $user = User::count();
         return [
-            Stat::make('Total Agen', $targets)
+            Stat::make('Total Target',  $targets)
+            ->icon('heroicon-o-chart-pie'),
+            
+            Stat::make('Total Agen', $agents)
                 ->icon('heroicon-o-user-group'),
-
-            Stat::make('Total Target',  $agents)
-                ->icon('heroicon-o-chart-pie'),
 
             Stat::make('Evaluasi Target', $assessmentResult)
                 ->icon('heroicon-o-check-circle'),

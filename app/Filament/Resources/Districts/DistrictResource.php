@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Districts;
 
+use App\Filament\Clusters\Wilayah\WilayahCluster;
 use App\Filament\Resources\Districts\Pages\CreateDistrict;
 use App\Filament\Resources\Districts\Pages\EditDistrict;
 use App\Filament\Resources\Districts\Pages\ListDistricts;
@@ -22,11 +23,11 @@ class DistrictResource extends Resource
     protected static ?string $model = District::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::MapPin;
     protected static ?string $recordTitleAttribute = 'name';
-    protected static string|UnitEnum|null $navigationGroup = 'Master Data';
+    protected static ?string $cluster = WilayahCluster::class;
     protected static ?string $navigationLabel = 'Kecamatan';
     protected static ?string $modelLabel = 'Kecamatan';
     protected static ?string $pluralModelLabel = 'Kecamatan';
-    protected static ?int $navigationSort = 13;
+    protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema
     {

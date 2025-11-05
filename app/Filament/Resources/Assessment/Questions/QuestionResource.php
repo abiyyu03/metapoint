@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Assessment\Questions;
 
+use App\Filament\Clusters\Assesment\AssesmentCluster;
 use App\Filament\Resources\Assessment\Questions\Pages\CreateQuestion;
 use App\Filament\Resources\Assessment\Questions\Pages\EditQuestion;
 use App\Filament\Resources\Assessment\Questions\Pages\ListQuestions;
@@ -21,10 +22,11 @@ class QuestionResource extends Resource
 {
     protected static ?string $model = Question::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::QuestionMarkCircle;
     protected static ?string $recordTitleAttribute = 'Pertanyaan';
-    protected static string|UnitEnum|null $navigationGroup = 'Asesment Master Data';
+    protected static ?string $navigationLabel = 'Pertanyaan Asesmen';
+    protected static ?int $navigationSort = 3;
+    protected static ?string $cluster = AssesmentCluster::class;
 
     public static function form(Schema $schema): Schema
     {

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Villages;
 
+use App\Filament\Clusters\Wilayah\WilayahCluster;
 use App\Filament\Resources\Villages\Pages\CreateVillage;
 use App\Filament\Resources\Villages\Pages\EditVillage;
 use App\Filament\Resources\Villages\Pages\ListVillages;
@@ -22,11 +23,11 @@ class VillageResource extends Resource
     protected static ?string $model = Village::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::HomeModern;
     protected static ?string $recordTitleAttribute = 'name';
-    protected static string|UnitEnum|null $navigationGroup = 'Master Data';
+    protected static ?string $cluster = WilayahCluster::class;
     protected static ?string $navigationLabel = 'Kelurahan / Desa';
     protected static ?string $modelLabel = 'Kelurahan / Desa';
     protected static ?string $pluralModelLabel = 'Kelurahan / Desa';
-    protected static ?int $navigationSort = 14;
+    protected static ?int $navigationSort = 5;
 
     public static function form(Schema $schema): Schema
     {

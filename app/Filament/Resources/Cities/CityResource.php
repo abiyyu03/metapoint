@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Cities;
 
+use App\Filament\Clusters\Wilayah\WilayahCluster;
 use App\Filament\Resources\Cities\Pages\CreateCity;
 use App\Filament\Resources\Cities\Pages\EditCity;
 use App\Filament\Resources\Cities\Pages\ListCities;
@@ -22,11 +23,11 @@ class CityResource extends Resource
     protected static ?string $model = City::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::BuildingOffice;
     protected static ?string $recordTitleAttribute = 'name';
-    protected static string|UnitEnum|null $navigationGroup = 'Master Data';
+    protected static ?string $cluster = WilayahCluster::class;
     protected static ?string $navigationLabel = 'Kota / Kabupaten';
     protected static ?string $modelLabel = 'Kota / Kabupaten';
     protected static ?string $pluralModelLabel = 'Kota / Kabupaten';
-    protected static ?int $navigationSort = 12;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {
