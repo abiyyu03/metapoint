@@ -25,14 +25,27 @@ class AssessmentOperator extends Page
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocument;
     protected static string|UnitEnum|null $navigationGroup = 'Assessment';
 
-    public ?int $targetId = null;
-    public ?int $agentId = null;
+    public ?int $target_id = null;
+    public ?int $agent_id = null;
+    public array $answers = [];
+
 
     public function mount(): void
     {
-        // Pastikan form punya state awal
         $this->form->fill();
     }
+
+    public function rules(): array
+    {
+        $rules = [];
+
+        foreach ($this->questions as $q) {
+            $rules["answers.{$q->id}"] = 'required|exists:answers,id';
+        }
+
+        return $rules;
+    }
+
 
     protected function getFormSchema(): array
     {
@@ -54,14 +67,14 @@ class AssessmentOperator extends Page
                                 ->mapWithKeys(fn($label, $id) => [(string) $id => $label])
                                 ->toArray();
 
-                            return Radio::make("question_{$question->id}")
+                            return Radio::make("answers.{$question->id}")
                                 ->label($question->value)
                                 ->options($options)
                                 ->required()
                                 ->columns(2);
                         }
 
-                        return Textarea::make("question_{$question->id}")
+                        return Textarea::make("answers.{$question->id}")
                             ->label($question->value)
                             ->rows(3)
                             ->nullable();
@@ -79,7 +92,6 @@ class AssessmentOperator extends Page
                 ->schema($sections);
         })->toArray();
 
-        // Ambil data untuk select dengan casting id ke string (menghindari invalid binding)
         $targetOptions = Target::pluck('fullname', 'id')
             ->mapWithKeys(fn($name, $id) => [(string) $id => $name])
             ->toArray();
@@ -100,17 +112,18 @@ class AssessmentOperator extends Page
                                 ->searchable()
                                 ->placeholder('Pilih salah satu target')
                                 ->helperText('Pastikan memilih data yang benar')
-                                ->required()
+                                ->rules(['required', 'exists:targets,id'])
                                 ->reactive(),
+
                             Select::make('agent_id')
                                 ->label('Pilih Agen')
                                 ->options($agentOptions)
                                 ->searchable()
                                 ->placeholder('Pilih salah satu agen')
                                 ->helperText('Pastikan memilih data yang benar')
-                                ->required()
+                                ->rules(['required', 'exists:agents,id'])
                                 ->reactive(),
-                        ]),
+                        ])
                 ],
                 $steps
             ))
