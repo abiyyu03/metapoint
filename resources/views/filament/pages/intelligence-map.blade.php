@@ -3,10 +3,6 @@
     {{-- Map Section --}}
     <x-filament::section>
         {{-- Header --}}
-        {{-- <x-slot name="heading">
-            Interactive Map
-        </x-slot> --}}
-
         <x-slot name="headerEnd">
             {{-- Toggle Controls --}}
             <div class="flex gap-4">
@@ -41,12 +37,36 @@
 
         {{-- Map Container --}}
         @if (count($this->getMarkers()) > 0)
-            <div
-                class="h-[700px] flex items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
+            <div class="relative h-[700px] rounded-lg overflow-hidden">
+
+                {{-- Map --}}
                 <x-leaflet-map :markers="$this->getMarkers()" :config="$this->getMapConfig()"
-                    class="h-[700px] rounded-lg border border-gray-300 dark:border-gray-600" />
+                    class="h-full w-full rounded-lg border border-gray-300 dark:border-gray-600 z-0"
+                    style="margin-top:20px" />
+
+                {{-- ✅ Legend (Centered + More Informative) --}}
+                <div class="flex justify-center items-center gap-8 mb-4"
+                    style="padding:8px 14px; background:rgba(255,255,255,0.92); border:1px solid #d1d5db; border-radius:8px;">
+
+                    <div class="flex items-center gap-2">
+                        <span
+                            style="display:inline-block; width:14px; height:14px; border-radius:50%; background:#e63946;"></span>
+                        <span class="text-gray-800 dark:text-gray-200" style="font-weight:600;">Target</span>
+                        <span class="text-gray-500 dark:text-gray-400 text-sm">(Lokasi calon sasaran)</span>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <span
+                            style="display:inline-block; width:14px; height:14px; border-radius:50%; background:#1d4ed8;"></span>
+                        <span class="text-gray-800 dark:text-gray-200" style="font-weight:600;">Agent</span>
+                        <span class="text-gray-500 dark:text-gray-400 text-sm">(Petugas lapangan)</span>
+                    </div>
+
+                </div>
+
             </div>
         @else
+            {{-- Empty State --}}
             <div
                 class="h-[700px] flex items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
                 <div class="text-center p-8">
@@ -60,31 +80,9 @@
                             Make sure lat/lng fields are filled for Targets and Agents.
                         @endif
                     </p>
-
-                    {{-- Tombol untuk add data (dinonaktifkan sementara) --}}
-                    {{-- 
-                    @if ($showTargets || $showAgents)
-                        <div class="flex gap-3 justify-center mt-4">
-                            @if ($showTargets)
-                                <a href="{{ route('filament.admin.resources.targets.create') }}"
-                                    class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm">
-                                    <span class="mr-2">🎯</span>
-                                    Add Target
-                                </a>
-                            @endif
-
-                            @if ($showAgents)
-                                <a href="{{ route('filament.admin.resources.agents.create') }}"
-                                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm">
-                                    <span class="mr-2">👥</span>
-                                    Add Agent
-                                </a>
-                            @endif
-                        </div>
-                    @endif 
-                    --}}
                 </div>
             </div>
         @endif
+
     </x-filament::section>
 </x-filament-panels::page>

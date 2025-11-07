@@ -22,8 +22,7 @@ class IntelligenceMap extends Page
 
     protected static ?int $navigationSort = 10;
 
-    // Optional: Grouping di sidebar
-    // protected static ?string $navigationGroup = 'Intelligence';
+    // Optional: Grouping di sidebar 
 
     // Public properties untuk toggle
     public $showTargets = true;
@@ -98,98 +97,104 @@ class IntelligenceMap extends Page
             }
         }
 
-        // dd(Json::encode($markers));
         return $markers;
     }
 
     protected function buildTargetPopup($target): string
     {
         $oganization = $target->organization->name ?? "-";
+
         return "
-            <div class='p-3 min-w-[250px]'>
-                <div class='mb-2'>
-                    <span class='text-xs font-semibold text-red-600 uppercase'>● TARGET</span>
-                    <h3 class='font-bold text-base mt-1'>{$target->fullname}</h3>
-                </div>
-                
-                <div class='space-y-1 text-sm border-t pt-2'>
-                    <div>
-                        <span class='text-gray-500 text-xs'>NIK:</span>
-                        <p class='font-medium'>{$target->nik}</p>
-                    </div>
-                    
-                    <div class='space-y-1 text-sm border-t pt-2'>
-                        <div>
-                            <span class='text-gray-500 text-xs'>Kelompok:</span>
-                            <p class='text-xs text-gray-700'>{$oganization}</p>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <span class='text-gray-500 text-xs'>Address:</span>
-                        <p class='text-xs text-gray-700'>{$target->address}</p>
-                    </div>
-                </div>
-                
-                <div class='flex gap-2 mt-3 pt-2 border-t'>
-                    <a href='/admin/targets/{$target->id}' 
-                       class='flex-1 text-center px-3 py-1.5 text-xs font-medium bg-red-500 text-white rounded hover:bg-red-600'>
-                        View Detail
-                    </a>
-                    <a href='https://www.google.com/maps/dir/?api=1&destination={$target->lat},{$target->lng}' 
-                       target='_blank'
-                       class='flex-1 text-center px-3 py-1.5 text-xs font-medium bg-green-500 text-white rounded hover:bg-green-600'>
-                        Direction
-                    </a>
-                </div>
+        <div style='padding:12px; min-width:240px; font-family:system-ui, sans-serif;'>
+            
+            <div style='margin-bottom:8px;'>
+                <span style='font-size:11px; font-weight:600; color:#dc2626; text-transform:uppercase;'>● Target</span>
+                <h3 style='font-size:16px; font-weight:700; margin-top:4px;'>{$target->fullname}</h3>
             </div>
-        ";
+
+            <div style='border-top:1px solid #e5e7eb; padding-top:8px; font-size:13px; color:#374151; line-height:1.3;'>
+
+                <div style='margin-bottom:6px;'>
+                    <span style='font-size:11px; color:#6b7280;'>NIK:</span><br>
+                    <span style='font-weight:600;'>{$target->nik}</span>
+                </div>
+
+                <div style='margin-bottom:6px;'>
+                    <span style='font-size:11px; color:#6b7280;'>Kelompok:</span><br>
+                    <span>{$oganization}</span>
+                </div>
+
+                <div style='margin-bottom:6px;'>
+                    <span style='font-size:11px; color:#6b7280;'>Alamat:</span><br>
+                    <span>{$target->address}</span>
+                </div>
+
+            </div>
+
+            <div style='display:flex; gap:8px; margin-top:10px; padding-top:8px; border-top:1px solid #e5e7eb;'>
+
+                <a href='/admin/targets/{$target->id}'
+                   style='flex:1; text-align:center; padding:6px 0; font-size:12px; font-weight:600; background:#dc2626; color:white; border-radius:6px; text-decoration:none;'>
+                    Detail
+                </a>
+
+                <a href='https://www.google.com/maps/dir/?api=1&destination={$target->lat},{$target->lng}'
+                   target='_blank'
+                   style='flex:1; text-align:center; padding:6px 0; font-size:12px; font-weight:600; background:#16a34a; color:white; border-radius:6px; text-decoration:none;'>
+                    Arahkan
+                </a>
+
+            </div>
+
+        </div>
+    ";
     }
+
 
     protected function buildAgentPopup($agent): string
     {
         $opsUnit = $agent->operationalUnit->name ?? "-";
 
         return "
-            <div class='p-3 min-w-[250px]'>
-                <div class='mb-2'>
-                    <span class='text-xs font-semibold text-blue-600 uppercase'>● AGENT</span>
-                    <h3 class='font-bold text-base mt-1'>{$agent->fullname}</h3>
+        <div style='padding:12px; min-width:250px; font-family:inherit;'>
+            <div style='margin-bottom:6px;'>
+                <span style='font-size:10px; font-weight:600; color:#2563eb; text-transform:uppercase;'>● AGENT</span>
+                <h3 style='font-weight:700; font-size:15px; margin-top:4px;'>{$agent->fullname}</h3>
+            </div>
+
+            <div style='padding-top:8px; border-top:1px solid #e5e7eb;'>
+                <div style='margin-bottom:6px;'>
+                    <span style='font-size:10px; color:#6b7280;'>Address:</span>
+                    <p style='font-size:12px; color:#374151; margin:0;'>{$agent->address}</p>
                 </div>
-                
-                <div class='space-y-1 text-sm border-t pt-2'>
-                    <div>
-                        <span class='text-gray-500 text-xs'>Address:</span>
-                        <p class='text-xs text-gray-700'>{$agent->address}</p>
-                    </div>
-                </div> 
-                <div class='space-y-1 text-sm border-t pt-2'>
-                    <div>
-                        <span class='text-gray-500 text-xs'>Ops Unit:</span>
-                        <p class='text-xs text-gray-700'>{$opsUnit}</p>
-                    </div>
-                </div>
-                
-                <div class='flex gap-2 mt-3 pt-2 border-t'>
-                    <a href='/admin/agents/{$agent->id}'
-                       class='flex-1 text-center px-3 py-1.5 text-xs font-medium bg-blue-500 text-white rounded hover:bg-blue-600'>
-                        View Detail
-                    </a>
-                    <a href='https://www.google.com/maps/dir/?api=1&destination={$agent->lat},{$agent->lng}'
-                       target='_blank'
-                       class='flex-1 text-center px-3 py-1.5 text-xs font-medium bg-green-500 text-white rounded hover:bg-green-600'>
-                        Direction
-                    </a>
+
+                <div style='margin-bottom:6px;'>
+                    <span style='font-size:10px; color:#6b7280;'>Ops Unit:</span>
+                    <p style='font-size:12px; color:#374151; margin:0;'>{$opsUnit}</p>
                 </div>
             </div>
-        ";
+
+            <div style='display:flex; gap:6px; margin-top:10px; padding-top:8px; border-top:1px solid #e5e7eb;'>
+                <a href='/admin/agents/{$agent->id}'
+                    style='flex:1; text-align:center; padding:6px; font-size:11px; font-weight:500; background:#3b82f6; color:white; border-radius:4px; text-decoration:none;'>
+                    View Detail
+                </a>
+
+                <a href='https://www.google.com/maps/dir/?api=1&destination={$agent->lat},{$agent->lng}'
+                    target='_blank'
+                    style='flex:1; text-align:center; padding:6px; font-size:11px; font-weight:500; background:#22c55e; color:white; border-radius:4px; text-decoration:none;'>
+                    Direction
+                </a>
+            </div>
+        </div>
+    ";
     }
+
 
     public function getMapConfig(): array
     {
         return [
-            'center' => [-2.0, 118.0], // Titik tengah Indonesia secara umum
-            'zoom' => 4, // zoom agar seluruh Indonesia terlihat
+            'center' => [-2.0, 118.0],
             'bounds' => [
                 'northEast' => [6.0, 141.0],
                 'southWest' => [-10.0, 95.0],

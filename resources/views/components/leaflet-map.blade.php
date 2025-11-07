@@ -1,7 +1,6 @@
 <div x-data="leafletMap(@js($markers ?? []), @js($config ?? []))" x-init="$nextTick(() => initMap())" wire:ignore class="relative">
-    <div x-ref="map" class="w-full h-[600px] rounded-lg border" style="height:800px"></div>
+    <div x-ref="map" class="w-full h-[600px] rounded-lg border" style="height:600px"></div>
 </div>
-
 
 @script
     <script>
@@ -9,6 +8,43 @@
             map: null,
             markerClusterGroup: null,
             initCalledAt: Date.now(),
+
+            getClusterColor(count) {
+                if (count > 100) return '#FF6B6B';
+                if (count > 50) return '#FFD700';
+                if (count > 20) return '#45B7D1';
+                if (count > 10) return '#4ECDC4';
+                return '#FFA07A';
+            },
+
+            createIconCreateFunction() {
+                return (cluster) => {
+                    const count = cluster.getChildCount();
+                    let bg = '';
+
+                    if (count > 100) bg = 'linear-gradient(135deg, #ff6b6b, #ff8e53)';
+                    else if (count > 50) bg = 'linear-gradient(135deg, #ffd93d, #ffb347)';
+                    else if (count > 20) bg = 'linear-gradient(135deg, #4dadf7, #2c82c9)';
+                    else if (count > 10) bg = 'linear-gradient(135deg, #4ECDC4, #45B7D1)';
+                    else bg = 'linear-gradient(135deg, #9be7a7, #57cc99)';
+
+                    return L.divIcon({
+                        html: `<div style="
+                background:${bg};
+                width:55px;
+                height:55px;
+                border-radius:50%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:18px;
+            ">${count}</div>`,
+                        className: 'custom-cluster-icon',
+                        iconSize: [55, 55],
+                        iconAnchor: [27.5, 27.5],
+                    });
+                };
+            },
 
             async waitForLeaflet(timeout = 6000) {
                 const start = Date.now();
@@ -35,7 +71,6 @@
                             return resolve(true);
                         }
                         if (Date.now() - start > timeout) {
-                            // don't reject — just resolve false to allow fallback
                             return resolve(false);
                         }
                         setTimeout(check, 100);
@@ -49,32 +84,31 @@
                     calledAt: this.initCalledAt
                 });
 
-                // Basic checks
                 if (!this.$refs || !this.$refs.map) {
                     console.error('❌ Map element not found. Make sure x-ref="map" ada di DOM.');
                     return;
                 }
 
-
                 try {
-                    // Wait for Leaflet
                     await this.waitForLeaflet().catch(err => {
                         console.error('❌ Leaflet not ready:', err);
                         throw err;
                     });
 
-                    // Check markerCluster availability (but allow fallback)
                     const hasMarkerCluster = await this.waitForMarkerCluster();
 
-                    // Default config
                     const defaultConfig = {
-                        center: [0, 0],
-                        zoom: 2,
+                        center: [-2.0, 118.0],
+                        zoom: 4,
                         maxZoom: 18,
+                        bounds: {
+                            northEast: [6.0, 141.0],
+                            southWest: [-10.0, 95.0]
+                        },
                         clusterOptions: {
-                            maxClusterRadius: 80,
+                            maxClusterRadius: 60,
                             spiderfyOnMaxZoom: true,
-                            showCoverageOnHover: false,
+                            showCoverageOnHover: true,
                             zoomToBoundsOnClick: true
                         }
                     };
@@ -83,25 +117,26 @@
                         ...config
                     };
 
-                    // Initialize map
                     this.map = L.map(this.$refs.map).setView(finalConfig.center, finalConfig.zoom);
                     console.log('✅ Map initialized');
 
-                    // Add tile layer (wrap in try)
                     try {
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '© OpenStreetMap contributors',
-                            maxZoom: finalConfig.maxZoom
+                        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                            attribution: '&copy; CartoDB & OSM'
                         }).addTo(this.map);
+
                         console.log('✅ Tile layer added');
                     } catch (err) {
                         console.warn('⚠️ Tile layer failed to add:', err);
                     }
 
-                    // Create cluster group or fallback
                     if (hasMarkerCluster) {
                         try {
-                            this.markerClusterGroup = L.markerClusterGroup(finalConfig.clusterOptions);
+                            this.markerClusterGroup = L.markerClusterGroup({
+                                ...finalConfig.clusterOptions,
+                                iconCreateFunction: this.createIconCreateFunction(),
+                            });
+
                         } catch (err) {
                             console.error('❌ Error creating markerClusterGroup, fallback to layerGroup:',
                                 err);
@@ -112,21 +147,16 @@
                         this.markerClusterGroup = L.layerGroup();
                     }
 
-                    // Safety: ensure markerClusterGroup exists
                     if (!this.markerClusterGroup) {
                         this.markerClusterGroup = L.layerGroup();
                         console.warn('⚠️ markerClusterGroup was falsy — created layerGroup fallback');
                     }
 
-                    // Add markers if any
-                    console.log(this.$refs.map.offsetHeight, this.$refs.map.offsetWidth)
-                    console.log('📊 Markers before adding:', markers);
                     if (markers && markers.length > 0) {
                         console.log('📍 Adding', markers.length, 'markers...');
                         this.addMarkers(markers);
                         console.log('✅ addMarkers returned');
 
-                        // Fit bounds safely
                         try {
                             const bounds = this.markerClusterGroup.getBounds ? this.markerClusterGroup
                                 .getBounds() : null;
@@ -144,7 +174,6 @@
                         console.warn('⚠️ No markers to display (markers falsy or empty)');
                     }
 
-                    // Add cluster/layer to map
                     try {
                         this.map.addLayer(this.markerClusterGroup);
                         console.log('✅ Cluster/layer group added to map');
@@ -152,7 +181,6 @@
                         console.error('❌ Failed to add cluster group to map:', err);
                     }
 
-                    // Fix size
                     setTimeout(() => {
                         try {
                             this.map.invalidateSize();
