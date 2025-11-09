@@ -17,8 +17,8 @@ class Dashboard extends BaseDashboard
     {
         return [
             StatsOverview::class,
-            TargetBehaviorChart::class,
             TopOrganizationsChart::class,
+            TargetBehaviorChart::class,
         ];
     }
 }

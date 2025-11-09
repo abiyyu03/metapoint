@@ -12,6 +12,12 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 class StatsOverview extends StatsOverviewWidget
 {
     protected static bool $isLazy = false;
+    protected int | string | array $columnSpan = 1;
+    protected function getColumns(): int
+    {
+        return 2;
+    }
+
     protected function getStats(): array
     {
         $targets = Target::count();
@@ -20,8 +26,8 @@ class StatsOverview extends StatsOverviewWidget
         $user = User::count();
         return [
             Stat::make('Total Target',  $targets)
-            ->icon('heroicon-o-chart-pie'),
-            
+                ->icon('heroicon-o-chart-pie'),
+
             Stat::make('Total Agen', $agents)
                 ->icon('heroicon-o-user-group'),
 

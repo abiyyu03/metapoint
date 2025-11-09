@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\DB;
 class TopOrganizationsChart extends ChartWidget
 {
     protected ?string $heading = 'Jumlah Anggota Kelompok Terbanyak';
-    protected ?string $maxHeight = '210px';
+    protected ?string $maxHeight = '150px';
+    protected int | string | array $columnSpan = 1;
     protected function getType(): string
     {
         return 'doughnut';
