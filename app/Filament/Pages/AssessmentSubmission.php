@@ -37,12 +37,12 @@ class AssessmentSubmission extends Page implements HasTable
                     ->sortable()
                     ->searchable(),
 
-                TextColumn::make('target.name')
+                TextColumn::make('target.fullname')
                     ->label('Nama Target')
                     ->sortable()
                     ->searchable(),
 
-                TextColumn::make('agent.name')
+                TextColumn::make('agent.fullname')
                     ->label('Nama Agen')
                     ->sortable()
                     ->searchable(),
