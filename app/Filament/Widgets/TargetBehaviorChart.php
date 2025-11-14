@@ -10,21 +10,28 @@ class TargetBehaviorChart extends ChartWidget
 {
     protected ?string $heading = 'Hasil Perilaku Target';
     protected ?string $maxHeight = '300px';
+    protected int | string | array $columnSpan = 'full';
 
     protected function getData(): array
     {
         $targetData = Target::query()
             ->select(
                 'target_classification',
-                DB::raw("DATE_FORMAT(created_at, '%Y-%m') as date"),
+                DB::raw("DATE_FORMAT(updated_at, '%Y-%m') as date"),
                 DB::raw('COUNT(*) as count')
             )
-            ->groupBy('target_classification', DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->groupBy('target_classification', DB::raw("DATE_FORMAT(updated_at, '%Y-%m')"))
             ->orderBy('date')
             ->get();
 
         $classifications = ['pro', 'netral', 'kontra'];
         $allDates = $targetData->pluck('date')->unique()->sort()->values();
+        $allDates = $allDates->take(-3)->values();
+
+        // 4. Memastikan $targetData hanya menyertakan entri dari bulan-bulan yang sudah dibatasi
+        $targetData = $targetData->filter(function ($item) use ($allDates) {
+            return $allDates->contains($item->date);
+        });
 
         $mappedData = $targetData->groupBy('date')->map(function ($items) {
             return $items->keyBy('target_classification')->map(fn($item) => $item['count']);
@@ -83,7 +90,7 @@ class TargetBehaviorChart extends ChartWidget
                     ],
                 ],
                 'y' => [
-                    'stacked' => false, 
+                    'stacked' => false,
                     'beginAtZero' => true,
                     'ticks' => [
                         'stepSize' => 1, // Memastikan skala Y berupa bilangan bulat
