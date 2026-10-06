@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'carto' => [
+        'basemaps_key' => env('CARTO_BASEMAPS_KEY'),
+    ],
+
 ];

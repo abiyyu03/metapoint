@@ -121,9 +121,20 @@
                     console.log('✅ Map initialized');
 
                     try {
-                        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                            attribution: '&copy; CartoDB & OSM'
-                        }).addTo(this.map);
+                        const cartoKey = @json(config('services.carto.basemaps_key'));
+                        const osmAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+                        // Carto basemaps require an API key; fall back to OSM tiles when it is not set.
+                        const tileLayer = cartoKey
+                            ? L.tileLayer(`https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png?key=${cartoKey}`, {
+                                attribution: `${osmAttribution}, &copy; <a href="https://carto.com/attributions">CARTO</a>`
+                            })
+                            : L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: osmAttribution
+                            });
+
+                        tileLayer.addTo(this.map);
 
                         console.log('✅ Tile layer added');
                     } catch (err) {
