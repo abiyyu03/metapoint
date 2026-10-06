@@ -45,8 +45,20 @@
                     style="margin-top:20px" />
 
                 {{-- ✅ Legend (Centered + More Informative) --}}
-                <div class="flex justify-center items-center gap-8 mb-4"
-                    style="padding:8px 14px; background:rgba(255,255,255,0.92); border:1px solid #d1d5db; border-radius:8px;">
+                <style>
+                    .intelligence-map-legend {
+                        padding: 8px 14px;
+                        background: rgba(255, 255, 255, 0.92);
+                        border: 1px solid #d1d5db;
+                        border-radius: 8px;
+                    }
+
+                    .dark .intelligence-map-legend {
+                        background: rgba(31, 41, 55, 0.92);
+                        border-color: #4b5563;
+                    }
+                </style>
+                <div class="intelligence-map-legend flex justify-center items-center gap-8 mb-4">
 
                     <div class="flex items-center gap-2">
                         <span
