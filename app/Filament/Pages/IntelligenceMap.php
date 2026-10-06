@@ -22,8 +22,6 @@ class IntelligenceMap extends Page
 
     protected static ?int $navigationSort = 10;
 
-    // Optional: Grouping di sidebar 
-
     // Public properties untuk toggle
     public $showTargets = true;
     public $showAgents = true;
@@ -40,7 +38,6 @@ class IntelligenceMap extends Page
                 ->where('lat', '<>', 0)
                 ->where('lng', '<>', 0)
                 ->get();
-
 
             foreach ($targets as $target) {
                 $lat = (float) $target->lat;
@@ -195,6 +192,7 @@ class IntelligenceMap extends Page
     {
         return [
             'center' => [-2.0, 118.0],
+            'zoom' => 1,
             'bounds' => [
                 'northEast' => [6.0, 141.0],
                 'southWest' => [-10.0, 95.0],
